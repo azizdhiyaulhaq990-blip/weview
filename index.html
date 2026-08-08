@@ -1,0 +1,3216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DesignExtract — Extract any website's design system</title>
+<meta name="description" content="Turn any URL into a reusable design system: colors, type, components, and ready-to-use HTML/CSS.">
+<style>
+/* ==================== style.css ==================== */
+/* ==========================================================================
+   DesignExtract — Global Styles
+   Tokens: Ink #111111 · Paper #F8F9FB · Accent #5E6AD2
+   Type: Space Grotesk (display) · Inter (body/UI) · JetBrains Mono (code)
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+:root {
+  /* Brand tokens */
+  --ink: #111111;
+  --paper-2: #FFFFFF;
+  --accent: #5E6AD2;
+  --accent-strong: #4750B0;
+  --bg: #F8F9FB;
+
+  /* Supporting neutrals */
+  --line: #E5E7EE;
+  --line-strong: #D6D9E3;
+  --muted: #6B7280;
+  --muted-2: #9AA0AC;
+  --surface: #FFFFFF;
+  --surface-sunken: #F1F2F6;
+
+  /* Semantic */
+  --success: #2FAE6D;
+  --warning: #D68A2C;
+  --danger: #D0483F;
+
+  /* Elevation */
+  --shadow-sm: 0 1px 2px rgba(17,17,17,0.05), 0 1px 1px rgba(17,17,17,0.03);
+  --shadow-md: 0 6px 16px rgba(17,17,17,0.08), 0 2px 6px rgba(17,17,17,0.04);
+  --shadow-lg: 0 20px 45px rgba(17,17,17,0.14), 0 6px 16px rgba(17,17,17,0.06);
+  --shadow-glow: 0 0 0 1px rgba(94,106,210,0.12), 0 12px 30px rgba(94,106,210,0.18);
+
+  /* Radius */
+  --r-sm: 8px;
+  --r-md: 14px;
+  --r-lg: 20px;
+  --r-xl: 28px;
+  --r-full: 999px;
+
+  /* Type */
+  --font-display: 'Space Grotesk', 'Inter', sans-serif;
+  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+
+  /* Motion */
+  --ease: cubic-bezier(.2,.7,.2,1);
+  --ease-spring: cubic-bezier(.34,1.4,.42,1);
+  --dur-fast: 150ms;
+  --dur-med: 320ms;
+  --dur-slow: 600ms;
+
+  --header-h: 72px;
+  --glass-bg: rgba(255,255,255,0.66);
+  --glass-border: rgba(255,255,255,0.5);
+}
+
+[data-theme="dark"] {
+  --ink: #F5F6F8;
+  --paper-2: #16171C;
+  --bg: #0B0C10;
+  --line: #24262E;
+  --line-strong: #32343E;
+  --muted: #9BA0AC;
+  --muted-2: #6E7280;
+  --surface: #16171C;
+  --surface-sunken: #1D1F26;
+  --glass-bg: rgba(22,23,28,0.66);
+  --glass-border: rgba(255,255,255,0.08);
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.3);
+  --shadow-md: 0 6px 20px rgba(0,0,0,0.45);
+  --shadow-lg: 0 24px 50px rgba(0,0,0,0.55);
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-body);
+  background: var(--bg);
+  color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+  transition: background var(--dur-med) var(--ease), color var(--dur-med) var(--ease);
+}
+
+img { max-width: 100%; display: block; }
+a { color: inherit; text-decoration: none; }
+button { font-family: inherit; cursor: pointer; }
+input, select, textarea { font-family: inherit; }
+
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  margin: 0;
+}
+
+.mono { font-family: var(--font-mono); }
+
+.container {
+  width: 100%;
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* ---------------- Buttons ---------------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 22px;
+  border-radius: var(--r-full);
+  font-size: 14px;
+  font-weight: 600;
+  border: 1px solid transparent;
+  transition: transform var(--dur-fast) var(--ease), box-shadow var(--dur-fast) var(--ease), background var(--dur-fast) var(--ease), border-color var(--dur-fast) var(--ease);
+  white-space: nowrap;
+}
+.btn:active { transform: scale(0.97); }
+
+.btn-primary {
+  background: var(--ink);
+  color: var(--paper-2);
+  box-shadow: var(--shadow-sm);
+}
+.btn-primary:hover { box-shadow: var(--shadow-md); transform: translateY(-1px); }
+
+.btn-accent {
+  background: var(--accent);
+  color: #fff;
+  box-shadow: var(--shadow-glow);
+}
+.btn-accent:hover { background: var(--accent-strong); transform: translateY(-1px); }
+
+.btn-ghost {
+  background: transparent;
+  color: var(--ink);
+  border-color: var(--line-strong);
+}
+.btn-ghost:hover { background: var(--surface-sunken); }
+
+.btn-sm { padding: 8px 16px; font-size: 13px; }
+.btn-block { width: 100%; }
+.btn[disabled] { opacity: 0.5; pointer-events: none; }
+
+/* ---------------- Icons (monochrome outline, inline SVG via currentColor) ---------------- */
+.icon { width: 20px; height: 20px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
+
+/* ---------------- Glass surfaces ---------------- */
+.glass {
+  background: var(--glass-bg);
+  backdrop-filter: blur(18px) saturate(140%);
+  -webkit-backdrop-filter: blur(18px) saturate(140%);
+  border: 1px solid var(--glass-border);
+}
+
+/* ==========================================================================
+   Top nav (marketing pages)
+   ========================================================================== */
+.site-header {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  height: var(--header-h);
+}
+.site-header .container {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.site-header-inner {
+  height: 100%;
+  border-bottom: 1px solid transparent;
+  transition: border-color var(--dur-med) var(--ease), background var(--dur-med) var(--ease);
+}
+.site-header.scrolled .site-header-inner { border-bottom-color: var(--line); }
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 18px;
+  letter-spacing: -0.01em;
+}
+.brand-mark {
+  width: 30px; height: 30px;
+  border-radius: 9px;
+  background: linear-gradient(135deg, var(--accent), #8B93E8);
+  display: grid; place-items: center;
+  box-shadow: var(--shadow-sm);
+}
+.brand-mark svg { width: 16px; height: 16px; stroke: #fff; }
+
+.nav-links { display: flex; align-items: center; gap: 32px; }
+.nav-links a { font-size: 14px; font-weight: 500; color: var(--muted); transition: color var(--dur-fast) var(--ease); }
+.nav-links a:hover { color: var(--ink); }
+.nav-actions { display: flex; align-items: center; gap: 12px; }
+
+.nav-toggle { display: none; }
+
+/* ==========================================================================
+   Hero
+   ========================================================================== */
+.hero {
+  position: relative;
+  padding: calc(var(--header-h) + 96px) 0 80px;
+  overflow: hidden;
+  background:
+    radial-gradient(60% 50% at 18% 12%, rgba(94,106,210,0.16), transparent 60%),
+    radial-gradient(50% 45% at 88% 8%, rgba(94,106,210,0.10), transparent 55%),
+    var(--bg);
+}
+
+.hero-shape {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(2px);
+  opacity: 0.5;
+  animation: float 9s ease-in-out infinite;
+}
+.hero-shape.s1 { width: 90px; height: 90px; top: 18%; left: 6%; background: linear-gradient(135deg, var(--accent), transparent); animation-delay: 0s; }
+.hero-shape.s2 { width: 46px; height: 46px; top: 66%; left: 12%; background: var(--ink); opacity: 0.06; border-radius: var(--r-md); animation-delay: 1.2s; animation-duration: 11s; }
+.hero-shape.s3 { width: 130px; height: 130px; top: 8%; right: 8%; background: radial-gradient(circle, rgba(94,106,210,0.25), transparent 70%); animation-delay: 2s; animation-duration: 10s; }
+.hero-shape.s4 { width: 26px; height: 26px; bottom: 12%; right: 18%; background: var(--ink); opacity: 0.08; border-radius: 8px; animation-delay: 0.6s; animation-duration: 8s; }
+
+.hero-grid {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: 1.05fr 0.95fr;
+  gap: 56px;
+  align-items: center;
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  border-radius: var(--r-full);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--accent);
+  box-shadow: var(--shadow-sm);
+  margin-bottom: 22px;
+}
+.eyebrow .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); animation: pulse-dot 2s infinite; }
+
+.hero h1 {
+  font-size: clamp(36px, 5vw, 58px);
+  margin-bottom: 20px;
+}
+.hero h1 .accent-word { color: var(--accent); position: relative; }
+
+.hero-sub {
+  font-size: 17px;
+  line-height: 1.6;
+  color: var(--muted);
+  max-width: 480px;
+  margin-bottom: 34px;
+}
+
+.hero-cta { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+.hero-note { font-size: 13px; color: var(--muted-2); margin-top: 16px; }
+
+/* --- Signature element: scanning browser mockup --- */
+.scan-mock {
+  position: relative;
+  border-radius: var(--r-xl);
+  overflow: hidden;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow-lg);
+  animation: rise-in 900ms var(--ease) both;
+}
+.scan-mock-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--line);
+}
+.scan-mock-bar .dotbtn { width: 10px; height: 10px; border-radius: 50%; background: var(--line-strong); }
+.scan-mock-url {
+  flex: 1;
+  margin-left: 8px;
+  padding: 6px 12px;
+  border-radius: var(--r-full);
+  background: var(--surface-sunken);
+  font-size: 12px;
+  font-family: var(--font-mono);
+  color: var(--muted);
+}
+.scan-mock-body {
+  position: relative;
+  padding: 22px;
+  min-height: 320px;
+  background:
+    linear-gradient(180deg, var(--surface-sunken) 0 54px, transparent 54px),
+    var(--surface);
+}
+.scan-mock-line {
+  position: absolute;
+  left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  box-shadow: 0 0 16px 2px rgba(94,106,210,0.6);
+  animation: scan-sweep 3.2s ease-in-out infinite;
+}
+.scan-block { border-radius: var(--r-sm); background: var(--line); }
+.scan-fake-nav { height: 12px; width: 40%; border-radius: var(--r-full); margin-bottom: 18px; }
+.scan-fake-hero { height: 64px; width: 100%; margin-bottom: 14px; border-radius: var(--r-md); }
+.scan-fake-row { display: flex; gap: 10px; margin-bottom: 10px; }
+.scan-fake-row .scan-block { height: 46px; flex: 1; }
+
+.swatch-tag {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 12px 7px 8px;
+  border-radius: var(--r-full);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow-md);
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  font-weight: 500;
+  color: var(--muted);
+  opacity: 0;
+  animation: tag-pop 700ms var(--ease-spring) forwards;
+}
+.swatch-tag .sw { width: 14px; height: 14px; border-radius: 50%; }
+.swatch-tag.t1 { top: 14%; right: -8%; animation-delay: 1.1s; }
+.swatch-tag.t2 { top: 46%; right: -14%; animation-delay: 1.5s; }
+.swatch-tag.t3 { bottom: 10%; left: -10%; animation-delay: 1.9s; }
+
+/* ==========================================================================
+   Sections
+   ========================================================================== */
+.section { padding: 96px 0; }
+.section-alt { background: var(--surface); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+
+.section-head { max-width: 620px; margin: 0 auto 56px; text-align: center; }
+.section-head .eyebrow { margin-bottom: 16px; }
+.section-head h2 { font-size: clamp(28px, 3.6vw, 40px); margin-bottom: 14px; }
+.section-head p { color: var(--muted); font-size: 16px; line-height: 1.65; }
+
+/* Feature grid */
+.feature-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+.feature-card {
+  padding: 28px;
+  border-radius: var(--r-lg);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  transition: transform var(--dur-med) var(--ease), box-shadow var(--dur-med) var(--ease), border-color var(--dur-med) var(--ease);
+}
+.feature-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); border-color: var(--line-strong); }
+.feature-icon {
+  width: 42px; height: 42px;
+  border-radius: var(--r-md);
+  display: grid; place-items: center;
+  background: var(--surface-sunken);
+  color: var(--accent);
+  margin-bottom: 18px;
+}
+.feature-card h3 { font-size: 17px; margin-bottom: 8px; }
+.feature-card p { font-size: 14px; color: var(--muted); line-height: 1.6; margin: 0; }
+
+/* Pricing */
+.pricing-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  align-items: stretch;
+}
+.price-card {
+  padding: 32px 26px;
+  border-radius: var(--r-lg);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  display: flex;
+  flex-direction: column;
+  transition: transform var(--dur-med) var(--ease), box-shadow var(--dur-med) var(--ease);
+}
+.price-card:hover { transform: translateY(-4px); }
+.price-card.featured {
+  background: var(--ink);
+  color: var(--paper-2);
+  box-shadow: var(--shadow-lg);
+  position: relative;
+}
+.price-card.featured .price-note,
+.price-card.featured .price-sub { color: rgba(255,255,255,0.6); }
+.price-badge {
+  position: absolute; top: -12px; right: 26px;
+  background: var(--accent); color: #fff;
+  font-size: 11px; font-weight: 700;
+  padding: 5px 12px; border-radius: var(--r-full);
+}
+.price-name { font-family: var(--font-display); font-weight: 600; font-size: 15px; margin-bottom: 6px; }
+.price-sub { font-size: 13px; color: var(--muted); margin-bottom: 20px; }
+.price-amount { font-family: var(--font-display); font-size: 40px; font-weight: 700; margin-bottom: 4px; }
+.price-amount span { font-size: 15px; font-weight: 500; opacity: 0.6; }
+.price-note { font-size: 12.5px; color: var(--muted-2); margin-bottom: 24px; }
+.price-features { list-style: none; padding: 0; margin: 0 0 28px; flex: 1; }
+.price-features li { display: flex; align-items: center; gap: 10px; font-size: 13.5px; padding: 8px 0; border-top: 1px solid var(--line); }
+.price-card.featured .price-features li { border-top-color: rgba(255,255,255,0.12); }
+.price-features li:first-child { border-top: none; }
+.price-features .icon { width: 16px; height: 16px; color: var(--success); }
+
+/* FAQ */
+.faq-list { max-width: 720px; margin: 0 auto; }
+.faq-item { border-bottom: 1px solid var(--line); }
+.faq-q {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 20px 4px;
+  background: none;
+  border: none;
+  text-align: left;
+  font-family: var(--font-body);
+  font-size: 15.5px;
+  font-weight: 600;
+  color: var(--ink);
+}
+.faq-q .icon { transition: transform var(--dur-med) var(--ease); color: var(--muted); }
+.faq-item[data-open="true"] .faq-q .icon { transform: rotate(45deg); color: var(--accent); }
+.faq-a {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height var(--dur-med) var(--ease), padding var(--dur-med) var(--ease);
+  font-size: 14.5px;
+  color: var(--muted);
+  line-height: 1.65;
+  padding: 0 4px;
+}
+.faq-item[data-open="true"] .faq-a { max-height: 220px; padding: 0 4px 22px; }
+
+/* Footer */
+.site-footer { padding: 64px 0 32px; background: var(--surface); border-top: 1px solid var(--line); }
+.footer-top { display: grid; grid-template-columns: 1.4fr repeat(3, 1fr); gap: 40px; margin-bottom: 48px; }
+.footer-brand p { color: var(--muted); font-size: 13.5px; line-height: 1.6; margin: 14px 0 0; max-width: 240px; }
+.footer-col h4 { font-size: 12.5px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted-2); margin-bottom: 16px; font-family: var(--font-body); font-weight: 600; }
+.footer-col a { display: block; font-size: 14px; color: var(--muted); padding: 6px 0; transition: color var(--dur-fast) var(--ease); }
+.footer-col a:hover { color: var(--ink); }
+.footer-bottom { display: flex; align-items: center; justify-content: space-between; padding-top: 28px; border-top: 1px solid var(--line); font-size: 13px; color: var(--muted-2); }
+.footer-socials { display: flex; gap: 14px; }
+.footer-socials a { color: var(--muted); transition: color var(--dur-fast) var(--ease); }
+.footer-socials a:hover { color: var(--accent); }
+
+/* ==========================================================================
+   Auth pages
+   ========================================================================== */
+.auth-shell {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+.auth-visual {
+  position: relative;
+  background:
+    radial-gradient(70% 60% at 20% 20%, rgba(94,106,210,0.35), transparent 60%),
+    radial-gradient(60% 50% at 85% 80%, rgba(94,106,210,0.2), transparent 55%),
+    var(--ink);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 48px;
+}
+.auth-visual .brand { color: #fff; }
+.auth-quote { color: rgba(255,255,255,0.92); font-family: var(--font-display); font-size: 26px; line-height: 1.35; max-width: 420px; }
+.auth-quote small { display: block; margin-top: 18px; font-family: var(--font-body); font-size: 13px; color: rgba(255,255,255,0.5); font-weight: 500; }
+.auth-visual-tags { display: flex; flex-wrap: wrap; gap: 10px; }
+.auth-visual-tags span {
+  font-family: var(--font-mono); font-size: 12px; padding: 7px 12px;
+  border-radius: var(--r-full); background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.14); color: rgba(255,255,255,0.85);
+}
+
+.auth-form-side { display: flex; align-items: center; justify-content: center; padding: 48px 24px; }
+.auth-card { width: 100%; max-width: 380px; }
+.auth-card .brand { display: none; margin-bottom: 28px; }
+.auth-card h1 { font-size: 26px; margin-bottom: 8px; }
+.auth-card .sub { color: var(--muted); font-size: 14.5px; margin-bottom: 32px; }
+
+.field { margin-bottom: 18px; }
+.field label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 7px; }
+.field input, .field select {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: var(--r-md);
+  border: 1px solid var(--line-strong);
+  background: var(--surface);
+  color: var(--ink);
+  font-size: 14.5px;
+  transition: border-color var(--dur-fast) var(--ease), box-shadow var(--dur-fast) var(--ease);
+}
+.field input:focus, .field select:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 4px rgba(94,106,210,0.14);
+}
+.field-error { font-size: 12.5px; color: var(--danger); margin-top: 6px; display: none; }
+.field.has-error input { border-color: var(--danger); }
+.field.has-error .field-error { display: block; }
+.field-row-between { display: flex; align-items: center; justify-content: space-between; margin: -4px 0 18px; font-size: 13px; }
+.field-row-between a { color: var(--accent); font-weight: 600; }
+.checkbox-row { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--muted); }
+
+.auth-alt { text-align: center; margin-top: 24px; font-size: 14px; color: var(--muted); }
+.auth-alt a { color: var(--accent); font-weight: 600; }
+
+.form-msg { padding: 12px 14px; border-radius: var(--r-sm); font-size: 13px; margin-bottom: 18px; display: none; }
+.form-msg.show { display: block; }
+.form-msg.error { background: rgba(208,72,63,0.1); color: var(--danger); }
+.form-msg.success { background: rgba(47,174,109,0.1); color: var(--success); }
+
+/* Theme toggle chip (used across pages) */
+.theme-toggle {
+  width: 38px; height: 38px;
+  border-radius: 50%;
+  border: 1px solid var(--line-strong);
+  background: var(--surface);
+  display: grid; place-items: center;
+  color: var(--ink);
+  transition: transform var(--dur-fast) var(--ease), background var(--dur-fast) var(--ease);
+}
+.theme-toggle:hover { transform: rotate(18deg); }
+.theme-toggle .icon-sun { display: none; }
+[data-theme="dark"] .theme-toggle .icon-moon { display: none; }
+[data-theme="dark"] .theme-toggle .icon-sun { display: block; }
+
+/* ==========================================================================
+   Responsive
+   ========================================================================== */
+@media (max-width: 980px) {
+  .hero-grid { grid-template-columns: 1fr; }
+  .feature-grid { grid-template-columns: repeat(2, 1fr); }
+  .pricing-grid { grid-template-columns: 1fr; max-width: 380px; margin: 0 auto; }
+  .footer-top { grid-template-columns: 1fr 1fr; }
+  .auth-shell { grid-template-columns: 1fr; }
+  .auth-visual { display: none; }
+}
+
+@media (max-width: 680px) {
+  .nav-links { display: none; }
+  .feature-grid { grid-template-columns: 1fr; }
+  .footer-top { grid-template-columns: 1fr; gap: 28px; }
+  .footer-bottom { flex-direction: column; gap: 14px; text-align: center; }
+  .hero { padding-top: calc(var(--header-h) + 56px); }
+  .swatch-tag.t1, .swatch-tag.t2, .swatch-tag.t3 { position: static; opacity: 1; animation: none; margin-top: 10px; display: inline-flex; }
+}
+
+/* ==================== animations.css ==================== */
+/* ==========================================================================
+   DesignExtract — Animation Library (CSS only)
+   ========================================================================== */
+
+/* ---------- Keyframes ---------- */
+@keyframes float {
+  0%, 100% { transform: translateY(0) translateX(0); }
+  50% { transform: translateY(-16px) translateX(6px); }
+}
+
+@keyframes pulse-dot {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(94,106,210,0.5); }
+  50% { box-shadow: 0 0 0 5px rgba(94,106,210,0); }
+}
+
+@keyframes rise-in {
+  from { opacity: 0; transform: translateY(24px) scale(0.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(18px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slide-in-right {
+  from { opacity: 0; transform: translateX(24px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes slide-in-left {
+  from { opacity: 0; transform: translateX(-24px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes scan-sweep {
+  0% { top: 6%; opacity: 0; }
+  10% { opacity: 1; }
+  50% { top: 92%; opacity: 1; }
+  60% { opacity: 0; }
+  100% { top: 6%; opacity: 0; }
+}
+
+@keyframes tag-pop {
+  0% { opacity: 0; transform: scale(0.6) translateY(6px); }
+  100% { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+@keyframes ripple-anim {
+  from { transform: scale(0); opacity: 0.5; }
+  to { transform: scale(2.6); opacity: 0; }
+}
+
+@keyframes skeleton-shine {
+  0% { background-position: -300px 0; }
+  100% { background-position: 300px 0; }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes progress-indeterminate {
+  0% { transform: translateX(-100%) scaleX(0.4); }
+  50% { transform: translateX(20%) scaleX(0.6); }
+  100% { transform: translateX(120%) scaleX(0.4); }
+}
+
+@keyframes toast-in {
+  from { opacity: 0; transform: translateY(12px) scale(0.96); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* ---------- Utility animation classes ---------- */
+.anim-fade-in { animation: fade-in var(--dur-med) var(--ease) both; }
+.anim-fade-up { animation: fade-up var(--dur-slow) var(--ease) both; }
+.anim-slide-right { animation: slide-in-right var(--dur-med) var(--ease) both; }
+.anim-slide-left { animation: slide-in-left var(--dur-med) var(--ease) both; }
+
+.reveal { opacity: 0; transform: translateY(22px); transition: opacity 700ms var(--ease), transform 700ms var(--ease); }
+.reveal.in-view { opacity: 1; transform: translateY(0); }
+
+.stagger > * { opacity: 0; animation: fade-up 700ms var(--ease) both; }
+.stagger > *:nth-child(1) { animation-delay: 0ms; }
+.stagger > *:nth-child(2) { animation-delay: 90ms; }
+.stagger > *:nth-child(3) { animation-delay: 180ms; }
+.stagger > *:nth-child(4) { animation-delay: 270ms; }
+.stagger > *:nth-child(5) { animation-delay: 360ms; }
+.stagger > *:nth-child(6) { animation-delay: 450ms; }
+
+/* ---------- Ripple micro-interaction ---------- */
+.ripple-surface { position: relative; overflow: hidden; }
+.ripple {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.55);
+  pointer-events: none;
+  animation: ripple-anim 650ms var(--ease) forwards;
+}
+[data-theme="dark"] .ripple { background: rgba(255,255,255,0.18); }
+.btn-ghost .ripple, .price-card .ripple, .feature-card .ripple { background: rgba(94,106,210,0.18); }
+
+/* ---------- Skeleton loading ---------- */
+.skeleton {
+  position: relative;
+  overflow: hidden;
+  background: var(--surface-sunken);
+  border-radius: var(--r-sm);
+}
+.skeleton::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.55), transparent);
+  background-size: 300px 100%;
+  animation: skeleton-shine 1.3s ease-in-out infinite;
+}
+[data-theme="dark"] .skeleton::after { background: linear-gradient(90deg, transparent, rgba(255,255,255,0.06), transparent); background-size: 300px 100%; }
+
+/* ---------- Spinner ---------- */
+.spinner {
+  width: 16px; height: 16px;
+  border-radius: 50%;
+  border: 2px solid rgba(255,255,255,0.35);
+  border-top-color: #fff;
+  animation: spin 700ms linear infinite;
+  display: inline-block;
+}
+.spinner.dark { border-color: rgba(17,17,17,0.15); border-top-color: var(--ink); }
+
+/* ---------- Indeterminate progress bar (extraction) ---------- */
+.progress-track {
+  position: relative;
+  height: 5px;
+  border-radius: var(--r-full);
+  background: var(--surface-sunken);
+  overflow: hidden;
+}
+.progress-track .bar {
+  position: absolute; inset: 0;
+  width: 40%;
+  border-radius: var(--r-full);
+  background: linear-gradient(90deg, var(--accent), #8B93E8);
+  animation: progress-indeterminate 1.3s ease-in-out infinite;
+}
+
+/* ---------- Sidebar transition (dashboard) ---------- */
+.dash-sidebar {
+  transition: transform var(--dur-med) var(--ease), width var(--dur-med) var(--ease);
+}
+.dash-shell.sidebar-collapsed .dash-sidebar { width: 76px; }
+.dash-shell.sidebar-collapsed .side-label,
+.dash-shell.sidebar-collapsed .side-section-title,
+.dash-shell.sidebar-collapsed .side-user-meta { opacity: 0; width: 0; overflow: hidden; }
+
+@media (max-width: 900px) {
+  .dash-sidebar {
+    position: fixed; z-index: 200; top: 0; bottom: 0; left: 0;
+    transform: translateX(-104%);
+  }
+  .dash-shell.mobile-nav-open .dash-sidebar { transform: translateX(0); box-shadow: var(--shadow-lg); }
+}
+
+/* ---------- Toast ---------- */
+.toast { animation: toast-in 260ms var(--ease-spring) both; }
+
+/* ---------- Hover lift (generic) ---------- */
+.hover-lift { transition: transform var(--dur-fast) var(--ease), box-shadow var(--dur-fast) var(--ease); }
+.hover-lift:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); }
+
+/* ---------- Scale-in for modals ---------- */
+@keyframes modal-in {
+  from { opacity: 0; transform: scale(0.94) translateY(10px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+.modal-panel { animation: modal-in 260ms var(--ease-spring) both; }
+@keyframes backdrop-in { from { opacity: 0; } to { opacity: 1; } }
+.modal-backdrop { animation: backdrop-in 200ms var(--ease) both; }
+
+/* ==================== dashboard.css ==================== */
+/* ==========================================================================
+   DesignExtract — Dashboard Layout
+   ========================================================================== */
+
+.dash-shell {
+  display: flex;
+  min-height: 100vh;
+  background: var(--bg);
+}
+
+/* ---------------- Sidebar ---------------- */
+.dash-sidebar {
+  width: 254px;
+  flex-shrink: 0;
+  background: var(--surface);
+  border-right: 1px solid var(--line);
+  display: flex;
+  flex-direction: column;
+  padding: 20px 16px;
+}
+
+.side-top { display: flex; align-items: center; justify-content: space-between; padding: 0 4px 22px; }
+.side-collapse-btn {
+  width: 30px; height: 30px;
+  border-radius: var(--r-sm);
+  border: 1px solid var(--line);
+  background: var(--surface);
+  display: grid; place-items: center;
+  color: var(--muted);
+}
+.side-collapse-btn:hover { color: var(--ink); background: var(--surface-sunken); }
+
+.side-section-title {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--muted-2);
+  padding: 18px 12px 8px;
+  white-space: nowrap;
+  transition: opacity var(--dur-fast) var(--ease);
+}
+
+.side-nav { list-style: none; margin: 0; padding: 0; }
+.side-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: var(--r-md);
+  color: var(--muted);
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 2px;
+  position: relative;
+  transition: background var(--dur-fast) var(--ease), color var(--dur-fast) var(--ease);
+  white-space: nowrap;
+}
+.side-link .icon { color: var(--muted-2); transition: color var(--dur-fast) var(--ease); }
+.side-link:hover { background: var(--surface-sunken); color: var(--ink); }
+.side-link:hover .icon { color: var(--ink); }
+.side-link.active { background: var(--ink); color: #fff; }
+.side-link.active .icon { color: #fff; }
+.side-label { transition: opacity var(--dur-fast) var(--ease); }
+
+.side-bottom { margin-top: auto; }
+.side-user {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px;
+  border-radius: var(--r-md);
+  border: 1px solid var(--line);
+  margin-top: 10px;
+  cursor: pointer;
+  transition: background var(--dur-fast) var(--ease);
+}
+.side-user:hover { background: var(--surface-sunken); }
+.side-avatar {
+  width: 34px; height: 34px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent), #8B93E8);
+  color: #fff;
+  display: grid; place-items: center;
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+.side-user-meta { min-width: 0; }
+.side-user-meta .name { font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.side-user-meta .email { font-size: 11.5px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+/* ---------------- Main area ---------------- */
+.dash-main { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+
+.dash-topbar {
+  height: 68px;
+  border-bottom: 1px solid var(--line);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 28px;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: var(--glass-bg);
+  backdrop-filter: blur(14px);
+}
+.topbar-left { display: flex; align-items: center; gap: 14px; }
+.mobile-menu-btn {
+  display: none;
+  width: 36px; height: 36px;
+  border-radius: var(--r-sm);
+  border: 1px solid var(--line);
+  background: var(--surface);
+  align-items: center; justify-content: center;
+  color: var(--ink);
+}
+.page-title { font-family: var(--font-display); font-size: 19px; font-weight: 600; }
+.page-crumb { font-size: 12.5px; color: var(--muted); margin-top: 1px; }
+.topbar-right { display: flex; align-items: center; gap: 12px; }
+
+.icon-btn {
+  width: 38px; height: 38px;
+  border-radius: 50%;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  display: grid; place-items: center;
+  color: var(--muted);
+  position: relative;
+  transition: background var(--dur-fast) var(--ease), color var(--dur-fast) var(--ease);
+}
+.icon-btn:hover { background: var(--surface-sunken); color: var(--ink); }
+.icon-btn .badge-dot { position: absolute; top: 7px; right: 8px; width: 7px; height: 7px; border-radius: 50%; background: var(--accent); border: 2px solid var(--surface); }
+
+.dash-content { padding: 28px; flex: 1; }
+.dash-content-narrow { max-width: 760px; }
+
+/* ---------------- Stat / summary cards ---------------- */
+.stat-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px; }
+.stat-card {
+  padding: 20px;
+  border-radius: var(--r-lg);
+  background: var(--surface);
+  border: 1px solid var(--line);
+}
+.stat-card .stat-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+.stat-icon { width: 34px; height: 34px; border-radius: var(--r-sm); display: grid; place-items: center; background: var(--surface-sunken); color: var(--accent); }
+.stat-value { font-family: var(--font-display); font-size: 26px; font-weight: 700; }
+.stat-label { font-size: 12.5px; color: var(--muted); margin-top: 2px; }
+.stat-trend { font-size: 12px; font-weight: 600; padding: 3px 8px; border-radius: var(--r-full); }
+.stat-trend.up { color: var(--success); background: rgba(47,174,109,0.1); }
+.stat-trend.down { color: var(--danger); background: rgba(208,72,63,0.1); }
+
+/* ---------------- Generic panel / card ---------------- */
+.panel {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  padding: 24px;
+  margin-bottom: 20px;
+}
+.panel-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; gap: 12px; flex-wrap: wrap; }
+.panel-head h3 { font-size: 16px; }
+.panel-head p { font-size: 13px; color: var(--muted); margin: 4px 0 0; }
+
+/* ---------------- Empty state ---------------- */
+.empty-state { text-align: center; padding: 56px 20px; }
+.empty-icon {
+  width: 64px; height: 64px; margin: 0 auto 18px;
+  border-radius: var(--r-lg);
+  background: var(--surface-sunken);
+  display: grid; place-items: center;
+  color: var(--muted-2);
+}
+.empty-state h3 { font-size: 16px; margin-bottom: 6px; }
+.empty-state p { font-size: 13.5px; color: var(--muted); max-width: 320px; margin: 0 auto 20px; }
+
+/* ---------------- Extractor ---------------- */
+.extract-form {
+  display: flex;
+  gap: 10px;
+  padding: 8px;
+  border-radius: var(--r-full);
+  border: 1px solid var(--line-strong);
+  background: var(--surface);
+  align-items: center;
+}
+.extract-form input {
+  flex: 1;
+  border: none;
+  outline: none;
+  background: transparent;
+  padding: 10px 14px;
+  font-size: 14.5px;
+  font-family: var(--font-mono);
+  color: var(--ink);
+}
+.extract-hint { font-size: 12.5px; color: var(--muted-2); margin-top: 10px; padding-left: 4px; }
+.extract-form + .extract-hint + .extract-progress + .form-msg { margin-top: 12px; }
+
+.extract-progress { margin-top: 22px; display: none; }
+.extract-progress.show { display: block; }
+.extract-progress .steps { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+.extract-step {
+  font-size: 12px; font-family: var(--font-mono);
+  padding: 6px 12px; border-radius: var(--r-full);
+  background: var(--surface-sunken); color: var(--muted-2);
+  display: flex; align-items: center; gap: 6px;
+}
+.extract-step.done { color: var(--success); }
+.extract-step.done::before { content: '✓'; font-weight: 700; }
+.extract-step.active { color: var(--accent); }
+
+.results-wrap { display: none; margin-top: 28px; }
+.results-wrap.show { display: block; animation: fade-up var(--dur-slow) var(--ease) both; }
+
+.result-tabs { display: flex; gap: 6px; border-bottom: 1px solid var(--line); margin-bottom: 22px; overflow-x: auto; }
+.result-tab {
+  padding: 10px 16px;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--muted);
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+  background: none; border: none;
+}
+.result-tab.active { color: var(--ink); border-bottom-color: var(--accent); }
+.result-panel { display: none; }
+.result-panel.active { display: block; animation: fade-in var(--dur-med) var(--ease) both; }
+
+.shot-frame {
+  border-radius: var(--r-lg);
+  border: 1px solid var(--line);
+  overflow: hidden;
+  background: var(--surface);
+}
+.shot-frame .scan-mock-bar { background: var(--surface-sunken); }
+
+.swatch-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 14px; }
+.swatch-item { border-radius: var(--r-md); overflow: hidden; border: 1px solid var(--line); cursor: pointer; transition: transform var(--dur-fast) var(--ease); }
+.swatch-item:hover { transform: translateY(-3px); }
+.swatch-color { height: 64px; }
+.swatch-meta { padding: 8px 10px; background: var(--surface); }
+.swatch-meta .name { font-size: 12px; font-weight: 600; }
+.swatch-meta .hex { font-size: 11px; font-family: var(--font-mono); color: var(--muted); }
+
+.type-sample { padding: 16px 0; border-bottom: 1px solid var(--line); }
+.type-sample:last-child { border-bottom: none; }
+.type-sample .label { font-size: 11.5px; color: var(--muted); font-family: var(--font-mono); margin-bottom: 8px; text-transform: uppercase; letter-spacing: .05em;}
+.type-sample .preview { font-family: var(--font-display); }
+
+.comp-row { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; padding: 18px; border-radius: var(--r-md); background: var(--surface-sunken); margin-bottom: 12px; }
+.comp-row-label { font-size: 12px; font-family: var(--font-mono); color: var(--muted); width: 100%; margin-bottom: 4px; }
+
+.code-block {
+  background: var(--ink);
+  color: #E7E9F5;
+  border-radius: var(--r-md);
+  padding: 18px;
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  line-height: 1.7;
+  overflow-x: auto;
+  white-space: pre;
+  max-height: 360px;
+}
+.code-block .tag { color: #8B93E8; }
+.code-block .attr { color: #E8B063; }
+.code-block .str { color: #7FD9A6; }
+.code-block .comment { color: #7E8399; }
+
+.result-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 20px; }
+
+/* ---------------- Grid list (favorites / library) ---------------- */
+.card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 18px; }
+.fav-card { border-radius: var(--r-lg); border: 1px solid var(--line); background: var(--surface); overflow: hidden; }
+.fav-thumb { height: 130px; position: relative; overflow: hidden; }
+.fav-thumb .scan-mock-body { min-height: 130px; padding: 14px; }
+.fav-body { padding: 16px; }
+.fav-body .fav-title { font-size: 14.5px; font-weight: 600; margin-bottom: 4px; }
+.fav-body .fav-url { font-size: 12px; color: var(--muted); font-family: var(--font-mono); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; margin-bottom: 12px; }
+.fav-swatches { display: flex; gap: 6px; margin-bottom: 14px; }
+.fav-swatches span { width: 18px; height: 18px; border-radius: 50%; border: 2px solid var(--surface); margin-left: -8px; }
+.fav-swatches span:first-child { margin-left: 0; }
+.fav-actions { display: flex; gap: 8px; }
+.fav-actions .btn { flex: 1; }
+
+/* ---------------- Table (library) ---------------- */
+.data-table { width: 100%; border-collapse: collapse; }
+.data-table th { text-align: left; font-size: 11.5px; text-transform: uppercase; letter-spacing: .05em; color: var(--muted-2); padding: 10px 14px; border-bottom: 1px solid var(--line); }
+.data-table td { padding: 14px; font-size: 13.5px; border-bottom: 1px solid var(--line); vertical-align: middle; }
+.data-table tr:last-child td { border-bottom: none; }
+.data-table tr:hover td { background: var(--surface-sunken); }
+.chip { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: var(--r-full); font-size: 11.5px; font-weight: 600; background: var(--surface-sunken); color: var(--muted); }
+.chip.html { color: #C9702F; background: rgba(201,112,47,0.1); }
+.chip.css { color: var(--accent); background: rgba(94,106,210,0.1); }
+
+/* ---------------- Profile / Settings forms ---------------- */
+.avatar-upload { display: flex; align-items: center; gap: 18px; margin-bottom: 26px; }
+.avatar-big { width: 72px; height: 72px; border-radius: 50%; background: linear-gradient(135deg, var(--accent), #8B93E8); color: #fff; display: grid; place-items: center; font-family: var(--font-display); font-size: 24px; font-weight: 700; }
+
+.setting-row { display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 18px 0; border-bottom: 1px solid var(--line); }
+.setting-row:last-child { border-bottom: none; }
+.setting-row-text .t { font-size: 14px; font-weight: 600; margin-bottom: 2px; }
+.setting-row-text .d { font-size: 12.5px; color: var(--muted); }
+
+.switch { position: relative; width: 42px; height: 24px; flex-shrink: 0; }
+.switch input { opacity: 0; width: 0; height: 0; position: absolute; }
+.switch .track { position: absolute; inset: 0; background: var(--line-strong); border-radius: var(--r-full); transition: background var(--dur-fast) var(--ease); cursor: pointer; }
+.switch .track::after { content: ''; position: absolute; width: 18px; height: 18px; border-radius: 50%; background: #fff; top: 3px; left: 3px; transition: transform var(--dur-fast) var(--ease-spring); box-shadow: var(--shadow-sm); }
+.switch input:checked + .track { background: var(--accent); }
+.switch input:checked + .track::after { transform: translateX(18px); }
+
+.theme-pick { display: flex; gap: 12px; }
+.theme-pick-opt { flex: 1; border: 2px solid var(--line); border-radius: var(--r-md); padding: 12px; cursor: pointer; text-align: center; transition: border-color var(--dur-fast) var(--ease); }
+.theme-pick-opt.active { border-color: var(--accent); }
+.theme-pick-opt .swatch-preview { height: 44px; border-radius: var(--r-sm); margin-bottom: 8px; }
+.theme-pick-opt span { font-size: 12.5px; font-weight: 600; }
+
+.danger-zone { border: 1px solid rgba(208,72,63,0.3); background: rgba(208,72,63,0.04); border-radius: var(--r-lg); padding: 22px; }
+.danger-zone h3 { color: var(--danger); font-size: 15px; margin-bottom: 6px; }
+.danger-zone p { font-size: 13px; color: var(--muted); margin: 0 0 16px; }
+.btn-danger { background: var(--danger); color: #fff; }
+.btn-danger:hover { background: #b53c34; }
+
+/* ---------------- Modal ---------------- */
+.modal-backdrop {
+  position: fixed; inset: 0; background: rgba(10,10,14,0.5);
+  display: none; align-items: center; justify-content: center; z-index: 500; padding: 20px;
+}
+.modal-backdrop.show { display: flex; }
+.modal-panel { background: var(--surface); border-radius: var(--r-lg); max-width: 460px; width: 100%; padding: 26px; box-shadow: var(--shadow-lg); }
+.modal-panel h3 { font-size: 17px; margin-bottom: 8px; }
+.modal-panel p { font-size: 13.5px; color: var(--muted); margin: 0 0 20px; line-height: 1.6; }
+.modal-actions { display: flex; gap: 10px; justify-content: flex-end; }
+
+/* ---------------- Toast container ---------------- */
+.toast-stack { position: fixed; bottom: 24px; right: 24px; z-index: 600; display: flex; flex-direction: column; gap: 10px; }
+.toast {
+  display: flex; align-items: center; gap: 10px;
+  padding: 13px 18px; border-radius: var(--r-md);
+  background: var(--ink); color: var(--paper-2);
+  font-size: 13.5px; font-weight: 500;
+  box-shadow: var(--shadow-lg);
+  max-width: 320px;
+}
+.toast .icon { width: 17px; height: 17px; color: var(--success); flex-shrink: 0; }
+
+/* ---------------- Responsive ---------------- */
+@media (max-width: 1080px) {
+  .stat-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 900px) {
+  .mobile-menu-btn { display: flex; }
+  .dash-content { padding: 18px; }
+  .stat-grid { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 560px) {
+  .stat-grid { grid-template-columns: 1fr; }
+  .extract-form { flex-wrap: wrap; border-radius: var(--r-lg); }
+  .extract-form input { width: 100%; order: -1; padding: 10px 8px 6px; }
+  .extract-form .btn { width: 100%; }
+}
+
+/* misc (from library.html) */
+.hidden-el{display:none;}
+</style>
+</head>
+<body>
+
+<!-- ============================================================= -->
+<!-- PAGE: INDEX (marketing homepage)                               -->
+<!-- ============================================================= -->
+<div id="page-index" class="dx-page">
+
+<header class="site-header">
+  <div class="container">
+    <div class="site-header-inner glass" style="width:100%;display:flex;align-items:center;justify-content:space-between;padding:0 20px;border-radius:var(--r-full);margin-top:12px;">
+      <a href="#" data-route="index" class="brand">
+        <span class="brand-mark"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M4 4h16v16H4z"/><path d="M4 10h16M10 4v16"/></svg></span>
+        DesignExtract
+      </a>
+      <nav class="nav-links">
+        <a href="#features">Features</a>
+        <a href="#pricing">Pricing</a>
+        <a href="#faq">FAQ</a>
+      </nav>
+      <div class="nav-actions">
+        <button class="theme-toggle" data-theme-toggle aria-label="Toggle dark mode">
+          <svg class="icon icon-moon" viewBox="0 0 24 24"><path d="M21 12.8A9 9 0 1 1 11.2 3 7 7 0 0 0 21 12.8Z"/></svg>
+          <svg class="icon icon-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+        </button>
+        <a href="#" data-route="login" class="btn btn-ghost btn-sm" style="display:none;" id="navLogin">Log in</a>
+        <a href="#" data-route="signup" class="btn btn-primary btn-sm" data-auth-cta>Get started</a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main>
+  <!-- ============ HERO ============ -->
+  <section class="hero">
+    <span class="hero-shape s1"></span>
+    <span class="hero-shape s2"></span>
+    <span class="hero-shape s3"></span>
+    <span class="hero-shape s4"></span>
+
+    <div class="container hero-grid">
+      <div>
+        <span class="eyebrow"><span class="dot"></span> Now scanning in your browser</span>
+        <h1>Extract the <span class="accent-word">design DNA</span> of any website</h1>
+        <p class="hero-sub">Paste a URL and DesignExtract reads its colors, typography, spacing and components — then hands you ready-to-use HTML &amp; CSS to learn from or remix.</p>
+        <div class="hero-cta">
+          <a href="#" data-route="signup" class="btn btn-accent">
+            <svg class="icon" viewBox="0 0 24 24" style="width:17px;height:17px;"><path d="M13 2 3 14h8l-1 8 10-12h-8z"/></svg>
+            Start extracting free
+          </a>
+          <a href="#features" class="btn btn-ghost">See how it works</a>
+        </div>
+        <p class="hero-note">No credit card · No installs · Runs entirely in your browser</p>
+      </div>
+
+      <div class="scan-mock">
+        <div class="scan-mock-bar">
+          <span class="dotbtn"></span><span class="dotbtn"></span><span class="dotbtn"></span>
+          <span class="scan-mock-url mono">figma.com/design</span>
+        </div>
+        <div class="scan-mock-body">
+          <div class="scan-mock-line"></div>
+          <div class="scan-block scan-fake-nav"></div>
+          <div class="scan-block scan-fake-hero"></div>
+          <div class="scan-fake-row">
+            <div class="scan-block"></div>
+            <div class="scan-block"></div>
+            <div class="scan-block"></div>
+          </div>
+
+          <div class="swatch-tag t1"><span class="sw" style="background:#5E6AD2;"></span>#5E6AD2</div>
+          <div class="swatch-tag t2"><span class="sw" style="background:#111111;"></span>Space Grotesk</div>
+          <div class="swatch-tag t3"><span class="sw" style="background:#F8F9FB;border:1px solid #e5e7ee;"></span>Radius 14px</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FEATURES ============ -->
+  <section class="section" id="features">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="eyebrow">Features</span>
+        <h2>Everything you need to reverse-engineer great design</h2>
+        <p>One URL becomes a complete, browsable breakdown of what makes a site's interface work.</p>
+      </div>
+
+      <div class="feature-grid stagger">
+        <div class="feature-card reveal">
+          <div class="feature-icon"><svg class="icon" viewBox="0 0 24 24"><circle cx="8" cy="8" r="4"/><circle cx="16" cy="16" r="4"/><path d="M11 8h6M8 11v6"/></svg></div>
+          <h3>Color extraction</h3>
+          <p>Pull the exact palette a site uses — primary, accent, background and supporting tones — with copyable hex values.</p>
+        </div>
+        <div class="feature-card reveal">
+          <div class="feature-icon"><svg class="icon" viewBox="0 0 24 24"><path d="M4 6h16M4 12h10M4 18h7"/></svg></div>
+          <h3>Typography mapping</h3>
+          <p>See the display and body typefaces in use, plus a rebuilt type scale you can reference for your own projects.</p>
+        </div>
+        <div class="feature-card reveal">
+          <div class="feature-icon"><svg class="icon" viewBox="0 0 24 24"><rect x="3" y="4" width="7" height="7" rx="1.5"/><rect x="14" y="4" width="7" height="7" rx="1.5"/><rect x="3" y="15" width="7" height="7" rx="1.5"/><rect x="14" y="15" width="7" height="7" rx="1.5"/></svg></div>
+          <h3>Component breakdown</h3>
+          <p>Buttons, inputs, cards, nav and footer patterns, itemized with their shape, radius and spacing rules.</p>
+        </div>
+        <div class="feature-card reveal">
+          <div class="feature-icon"><svg class="icon" viewBox="0 0 24 24"><path d="m18 16 4-4-4-4M6 8l-4 4 4 4M14.5 4l-5 16"/></svg></div>
+          <h3>Faithful code reconstruction</h3>
+          <p>Rebuild the rendered DOM with computed visual styles — no screenshot required.</p>
+        </div>
+        <div class="feature-card reveal">
+          <div class="feature-icon"><svg class="icon" viewBox="0 0 24 24"><path d="M12 21s-7-4.4-9.5-9A5.5 5.5 0 0 1 12 6a5.5 5.5 0 0 1 9.5 6c-2.5 4.6-9.5 9-9.5 9Z"/></svg></div>
+          <h3>Favorites library</h3>
+          <p>Save any extraction to revisit later. Build a personal archive of interfaces you find worth studying.</p>
+        </div>
+        <div class="feature-card reveal">
+          <div class="feature-icon"><svg class="icon" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M4 9h16"/></svg></div>
+          <h3>Code library</h3>
+          <p>Every saved favorite keeps its generated markup and styles organized in one searchable table.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ PRICING ============ -->
+  <section class="section section-alt" id="pricing">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="eyebrow">Pricing</span>
+        <h2>Start free, upgrade when you're ready</h2>
+        <p>Every plan runs entirely in your browser — your extractions stay on your device.</p>
+      </div>
+
+      <div class="pricing-grid stagger">
+        <div class="price-card reveal">
+          <div class="price-name">Starter</div>
+          <div class="price-sub">For casual inspiration hunting</div>
+          <div class="price-amount">$0<span>/mo</span></div>
+          <div class="price-note">No card required</div>
+          <ul class="price-features">
+            <li><svg class="icon" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>10 extractions / month</li>
+            <li><svg class="icon" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>Unlimited favorites</li>
+            <li><svg class="icon" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>HTML &amp; CSS export</li>
+          </ul>
+          <a href="#" data-route="signup" class="btn btn-ghost btn-block">Get started</a>
+        </div>
+
+        <div class="price-card featured reveal">
+          <span class="price-badge">Most popular</span>
+          <div class="price-name">Pro</div>
+          <div class="price-sub">For designers &amp; builders</div>
+          <div class="price-amount">$12<span>/mo</span></div>
+          <div class="price-note">Billed monthly</div>
+          <ul class="price-features">
+            <li><svg class="icon" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>Unlimited extractions</li>
+            <li><svg class="icon" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>Full component breakdown</li>
+            <li><svg class="icon" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>Code library with tags</li>
+            <li><svg class="icon" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>Priority extraction speed</li>
+          </ul>
+          <a href="#" data-route="signup" class="btn btn-accent btn-block">Start free trial</a>
+        </div>
+
+        <div class="price-card reveal">
+          <div class="price-name">Team</div>
+          <div class="price-sub">Shared design research</div>
+          <div class="price-amount">$29<span>/mo</span></div>
+          <div class="price-note">Per workspace</div>
+          <ul class="price-features">
+            <li><svg class="icon" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>Everything in Pro</li>
+            <li><svg class="icon" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>Shared favorites library</li>
+            <li><svg class="icon" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>5 team seats</li>
+          </ul>
+          <a href="#" data-route="signup" class="btn btn-ghost btn-block">Contact sales</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FAQ ============ -->
+  <section class="section" id="faq">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="eyebrow">FAQ</span>
+        <h2>Common questions</h2>
+      </div>
+
+      <div class="faq-list reveal">
+        <div class="faq-item" data-open="false">
+          <button class="faq-q">Does this inspect a real live website? <svg class="icon" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></button>
+          <div class="faq-a">DesignExtract opens the target website in a server-side headless browser and analyzes its rendered DOM and computed styles. No screenshot is captured or stored. It's built for learning and inspiration, and the output structure matches what a backend-powered extractor would return.</div>
+        </div>
+        <div class="faq-item" data-open="false">
+          <button class="faq-q">Is my data stored anywhere? <svg class="icon" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></button>
+          <div class="faq-a">Everything — your account, favorites, and settings — is stored locally in your browser's LocalStorage. Nothing is sent to a server.</div>
+        </div>
+        <div class="faq-item" data-open="false">
+          <button class="faq-q">Can I use the generated code commercially? <svg class="icon" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></button>
+          <div class="faq-a">The generated HTML and CSS are yours to use as a learning scaffold. Always respect the original site's actual copyrighted assets, imagery and branding.</div>
+        </div>
+        <div class="faq-item" data-open="false">
+          <button class="faq-q">Do I need to install anything? <svg class="icon" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></button>
+          <div class="faq-a">No. DesignExtract is pure HTML, CSS and JavaScript that runs entirely in your browser — no build step, no backend, no dependencies.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <a href="#" data-route="index" class="brand">
+          <span class="brand-mark"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M4 4h16v16H4z"/><path d="M4 10h16M10 4v16"/></svg></span>
+          DesignExtract
+        </a>
+        <p>A browser-based tool for studying the visual design of the web, one URL at a time.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Product</h4>
+        <a href="#features">Features</a>
+        <a href="#pricing">Pricing</a>
+        <a href="#" data-route="signup">Get started</a>
+      </div>
+      <div class="footer-col">
+        <h4>Account</h4>
+        <a href="#" data-route="login">Log in</a>
+        <a href="#" data-route="signup">Sign up</a>
+        <a href="#" data-route="dashboard">Dashboard</a>
+      </div>
+      <div class="footer-col">
+        <h4>Resources</h4>
+        <a href="#faq">FAQ</a>
+        <a href="#">Guides</a>
+        <a href="#">Changelog</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 DesignExtract. Built for learning &amp; inspiration.</span>
+      <div class="footer-socials">
+        <a href="#" aria-label="X"><svg class="icon" style="width:17px;height:17px;" viewBox="0 0 24 24"><path d="M4 4l16 16M20 4 4 20"/></svg></a>
+        <a href="#" aria-label="GitHub"><svg class="icon" style="width:17px;height:17px;" viewBox="0 0 24 24"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.9c0-1 .1-1.4-.5-2 2-.2 4.5-1 4.5-5 0-1.1-.4-2-1-2.7.1-.3.4-1.4-.1-2.8 0 0-.9-.3-3 1a10 10 0 0 0-5.6 0c-2.1-1.3-3-1-3-1-.5 1.4-.2 2.5-.1 2.8-.6.7-1 1.7-1 2.7 0 4 2.5 4.8 4.5 5-.3.4-.5 1-.5 1.8V21"/></svg></a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+</div>
+<!-- /page-index -->
+
+<!-- ============================================================= -->
+<!-- PAGE: LOGIN                                                    -->
+<!-- ============================================================= -->
+<div id="page-login" class="dx-page" style="display:none;">
+<div class="auth-shell">
+  <div class="auth-visual">
+    <a href="#" data-route="index" class="brand">
+      <span class="brand-mark"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M4 4h16v16H4z"/><path d="M4 10h16M10 4v16"/></svg></span>
+      DesignExtract
+    </a>
+    <div class="auth-quote">
+      "Good design is invisible until you look for the pattern behind it."
+      <small>Every extraction breaks that pattern down for you.</small>
+    </div>
+    <div class="auth-visual-tags">
+      <span>#5E6AD2</span><span>Space Grotesk</span><span>Radius 14px</span><span>Glassmorphism</span>
+    </div>
+  </div>
+
+  <div class="auth-form-side">
+    <div class="auth-card anim-fade-up">
+      <a href="#" data-route="index" class="brand"><span class="brand-mark"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M4 4h16v16H4z"/><path d="M4 10h16M10 4v16"/></svg></span>DesignExtract</a>
+      <h1>Welcome back</h1>
+      <p class="sub">Log in to keep extracting and browsing your saved designs.</p>
+
+      <div class="form-msg" id="loginFormMsg"></div>
+
+      <form id="loginForm" novalidate>
+        <div class="field">
+          <label for="loginEmail">Email</label>
+          <input type="email" id="loginEmail" name="email" placeholder="you@example.com" autocomplete="email">
+          <div class="field-error">Enter a valid email address.</div>
+        </div>
+        <div class="field">
+          <label for="loginPassword">Password</label>
+          <input type="password" id="loginPassword" name="password" placeholder="••••••••" autocomplete="current-password">
+          <div class="field-error">Enter your password.</div>
+        </div>
+        <div class="field-row-between">
+          <label class="checkbox-row"><input type="checkbox" checked style="accent-color:var(--accent);"> Remember me</label>
+          <a href="#">Forgot password?</a>
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">Log in</button>
+      </form>
+
+      <p class="auth-alt">Don't have an account? <a href="#" data-route="signup">Sign up free</a></p>
+    </div>
+  </div>
+</div>
+</div>
+<!-- /page-login -->
+
+<!-- ============================================================= -->
+<!-- PAGE: SIGNUP                                                   -->
+<!-- ============================================================= -->
+<div id="page-signup" class="dx-page" style="display:none;">
+<div class="auth-shell">
+  <div class="auth-visual">
+    <a href="#" data-route="index" class="brand">
+      <span class="brand-mark"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M4 4h16v16H4z"/><path d="M4 10h16M10 4v16"/></svg></span>
+      DesignExtract
+    </a>
+    <div class="auth-quote">
+      "Every interface is a set of decisions waiting to be studied."
+      <small>Create a free account and start your library.</small>
+    </div>
+    <div class="auth-visual-tags">
+      <span>Colors</span><span>Typography</span><span>Components</span><span>Code export</span>
+    </div>
+  </div>
+
+  <div class="auth-form-side">
+    <div class="auth-card anim-fade-up">
+      <a href="#" data-route="index" class="brand"><span class="brand-mark"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M4 4h16v16H4z"/><path d="M4 10h16M10 4v16"/></svg></span>DesignExtract</a>
+      <h1>Create your account</h1>
+      <p class="sub">Free forever for 10 extractions a month. No card needed.</p>
+
+      <div class="form-msg" id="signupFormMsg"></div>
+
+      <form id="signupForm" novalidate>
+        <div class="field">
+          <label for="signupName">Full name</label>
+          <input type="text" id="signupName" name="name" placeholder="Ada Lovelace" autocomplete="name">
+          <div class="field-error">Enter your full name.</div>
+        </div>
+        <div class="field">
+          <label for="signupEmail">Email</label>
+          <input type="email" id="signupEmail" name="email" placeholder="you@example.com" autocomplete="email">
+          <div class="field-error">Enter a valid email address.</div>
+        </div>
+        <div class="field">
+          <label for="signupPassword">Password</label>
+          <input type="password" id="signupPassword" name="password" placeholder="At least 6 characters" autocomplete="new-password">
+          <div class="field-error">Use at least 6 characters.</div>
+        </div>
+        <div class="field">
+          <label for="signupConfirm">Confirm password</label>
+          <input type="password" id="signupConfirm" name="confirm" placeholder="Repeat your password" autocomplete="new-password">
+          <div class="field-error">Passwords do not match.</div>
+        </div>
+        <button type="submit" class="btn btn-primary btn-block" style="margin-top:6px;">Create account</button>
+      </form>
+
+      <p class="auth-alt">Already have an account? <a href="#" data-route="login">Log in</a></p>
+    </div>
+  </div>
+</div>
+</div>
+<!-- /page-signup -->
+
+<!-- ============================================================= -->
+<!-- PAGE: APP (shared dashboard shell + views)                     -->
+<!-- ============================================================= -->
+<div id="page-app" class="dx-page" style="display:none;">
+
+<div class="dash-shell">
+  <aside class="dash-sidebar">
+    <div class="side-top">
+      <a href="#" data-route="index" class="brand" style="font-size:16px;">
+        <span class="brand-mark"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M4 4h16v16H4z"/><path d="M4 10h16M10 4v16"/></svg></span>
+        <span class="side-label">DesignExtract</span>
+      </a>
+      <button class="side-collapse-btn" aria-label="Collapse sidebar">
+        <svg class="icon" viewBox="0 0 24 24" style="width:15px;height:15px;"><path d="M9 4v16M5 4h14a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1Z"/></svg>
+      </button>
+    </div>
+
+    <div class="side-section-title">Menu</div>
+    <ul class="side-nav">
+      <li><a href="#" data-route="dashboard" class="side-link"><svg class="icon" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg><span class="side-label">Dashboard</span></a></li>
+      <li><a href="#" data-route="extractor" class="side-link"><svg class="icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg><span class="side-label">Website Extractor</span></a></li>
+      <li><a href="#" data-route="favorites" class="side-link"><svg class="icon" viewBox="0 0 24 24"><path d="M12 21s-7-4.4-9.5-9A5.5 5.5 0 0 1 12 6a5.5 5.5 0 0 1 9.5 6c-2.5 4.6-9.5 9-9.5 9Z"/></svg><span class="side-label">Favorites</span></a></li>
+      <li><a href="#" data-route="library" class="side-link"><svg class="icon" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M4 9h16M9 9v11"/></svg><span class="side-label">Code Library</span></a></li>
+    </ul>
+
+    <div class="side-section-title">Account</div>
+    <ul class="side-nav">
+      <li><a href="#" data-route="profile" class="side-link"><svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4.5 5-6 8-6s6.5 1.5 8 6"/></svg><span class="side-label">Profile</span></a></li>
+      <li><a href="#" data-route="settings" class="side-link"><svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1-1.6 1.7 1.7 0 0 0-1.9.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.9 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.6-1 1.7 1.7 0 0 0-.3-1.9l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.9.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.9-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.9V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1Z"/></svg><span class="side-label">Settings</span></a></li>
+    </ul>
+
+    <div class="side-bottom">
+      <div class="side-user" data-logout title="Log out">
+        <div class="side-avatar" data-user-initials>?</div>
+        <div class="side-user-meta">
+          <div class="name" data-user-name>—</div>
+          <div class="email" data-user-email>—</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <div class="dash-main">
+    <header class="dash-topbar">
+      <div class="topbar-left">
+        <button class="mobile-menu-btn" aria-label="Open menu"><svg class="icon" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+        <div>
+          <div class="page-title" id="pageTitle">Dashboard</div>
+          <div class="page-crumb" id="pageCrumb">Overview of your extractions</div>
+        </div>
+      </div>
+      <div class="topbar-right">
+        <button class="theme-toggle" data-theme-toggle aria-label="Toggle dark mode">
+          <svg class="icon icon-moon" viewBox="0 0 24 24"><path d="M21 12.8A9 9 0 1 1 11.2 3 7 7 0 0 0 21 12.8Z"/></svg>
+          <svg class="icon icon-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+        </button>
+        <button class="icon-btn" id="topbarNotif" aria-label="Notifications"><svg class="icon" viewBox="0 0 24 24"><path d="M6 8a6 6 0 0 1 12 0c0 5 2 6 2 6H4s2-1 2-6Z"/><path d="M9.5 20a2.5 2.5 0 0 0 5 0"/></svg><span class="badge-dot"></span></button>
+        <a href="#" data-route="extractor" class="btn btn-accent btn-sm" id="topbarNewExtraction">
+          <svg class="icon" viewBox="0 0 24 24" style="width:15px;height:15px;"><path d="M12 5v14M5 12h14"/></svg> New extraction
+        </a>
+      </div>
+    </header>
+
+    <!-- ============ VIEW: DASHBOARD ============ -->
+    <main class="dash-content" id="view-dashboard" data-page="dashboard-home">
+      <div class="stat-grid">
+        <div class="stat-card reveal in-view">
+          <div class="stat-top">
+            <div class="stat-icon"><svg class="icon" viewBox="0 0 24 24" style="width:17px;height:17px;"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg></div>
+          </div>
+          <div class="stat-value" data-stat="extractions">0</div>
+          <div class="stat-label">Total extractions</div>
+        </div>
+        <div class="stat-card reveal in-view">
+          <div class="stat-top">
+            <div class="stat-icon"><svg class="icon" viewBox="0 0 24 24" style="width:17px;height:17px;"><path d="M12 21s-7-4.4-9.5-9A5.5 5.5 0 0 1 12 6a5.5 5.5 0 0 1 9.5 6c-2.5 4.6-9.5 9-9.5 9Z"/></svg></div>
+          </div>
+          <div class="stat-value" data-stat="favorites">0</div>
+          <div class="stat-label">Saved favorites</div>
+        </div>
+        <div class="stat-card reveal in-view">
+          <div class="stat-top">
+            <div class="stat-icon"><svg class="icon" viewBox="0 0 24 24" style="width:17px;height:17px;"><circle cx="12" cy="12" r="9"/></svg></div>
+          </div>
+          <div class="stat-value" data-stat="colors">0</div>
+          <div class="stat-label">Colors catalogued</div>
+        </div>
+        <div class="stat-card reveal in-view">
+          <div class="stat-top">
+            <div class="stat-icon"><svg class="icon" viewBox="0 0 24 24" style="width:17px;height:17px;"><rect x="4" y="4" width="16" height="16" rx="3"/></svg></div>
+          </div>
+          <div class="stat-value" data-stat="components">0</div>
+          <div class="stat-label">Components mapped</div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head">
+          <div>
+            <h3>Recent extractions</h3>
+            <p>Your latest saved designs</p>
+          </div>
+          <a href="#" data-route="favorites" class="btn btn-ghost btn-sm">View all</a>
+        </div>
+        <div class="card-grid" data-recent-list></div>
+      </div>
+    </main>
+
+    <!-- ============ VIEW: EXTRACTOR ============ -->
+    <main class="dash-content" id="view-extractor" style="display:none;">
+      <div class="panel">
+        <div class="panel-head">
+          <div>
+            <h3>Extract a design</h3>
+            <p>Paste any URL — DesignExtract will read its visual system</p>
+          </div>
+        </div>
+
+        <form id="extractForm" class="extract-form ripple-surface">
+          <svg class="icon" viewBox="0 0 24 24" style="margin-left:8px;color:var(--muted-2);"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+          <input type="text" name="url" placeholder="https://example.com" autocomplete="off" value="stripe.com">
+          <button type="submit" class="btn btn-accent">
+            <svg class="icon" viewBox="0 0 24 24" style="width:16px;height:16px;"><path d="M13 2 3 14h8l-1 8 10-12h-8z"/></svg>
+            Extract
+          </button>
+        </form>
+        <p class="extract-hint">Real extraction runs through the DesignExtract backend using a headless browser.</p>
+
+        <div class="extract-progress">
+          <div class="progress-track"><div class="bar"></div></div>
+          <div class="steps"></div>
+        </div>
+        <div class="form-msg error" id="extractError" role="alert" aria-live="polite"></div>
+      </div>
+
+      <div class="results-wrap">
+        <div class="panel">
+          <div class="panel-head">
+            <div>
+              <h3>Extraction results</h3>
+              <p class="mono" data-shot-url style="font-size:12.5px;"></p>
+            </div>
+            <div style="display:flex;gap:8px;">
+              <button class="btn btn-primary btn-sm" data-save-fav>
+                <svg class="icon" viewBox="0 0 24 24" style="width:15px;height:15px;"><path d="M12 21s-7-4.4-9.5-9A5.5 5.5 0 0 1 12 6a5.5 5.5 0 0 1 9.5 6c-2.5 4.6-9.5 9-9.5 9Z"/></svg>
+                Save to Favorites
+              </button>
+            </div>
+          </div>
+
+          <div class="result-tabs">
+            <button class="result-tab active" data-tab="tab-colors">Colors</button>
+            <button class="result-tab" data-tab="tab-type">Typography</button>
+            <button class="result-tab" data-tab="tab-components">Components</button>
+            <button class="result-tab" data-tab="tab-code">Code</button>
+          </div>
+
+          <div id="tab-colors" class="result-panel">
+            <div class="swatch-grid" data-swatch-grid></div>
+          </div>
+
+          <div id="tab-type" class="result-panel">
+            <div data-type-samples></div>
+          </div>
+
+          <div id="tab-components" class="result-panel">
+            <div data-components></div>
+          </div>
+
+          <div id="tab-code" class="result-panel">
+            <p style="font-size:12.5px;color:var(--muted);margin:0 0 10px;font-weight:600;">HTML</p>
+            <pre class="code-block" data-code-html></pre>
+            <div class="result-actions">
+              <button class="btn btn-ghost btn-sm" data-copy-html>Copy HTML</button>
+              <button class="btn btn-ghost btn-sm" data-download-html>Download index.html</button>
+            </div>
+
+            <p style="font-size:12.5px;color:var(--muted);margin:24px 0 10px;font-weight:600;">CSS</p>
+            <pre class="code-block" data-code-css></pre>
+            <div class="result-actions">
+              <button class="btn btn-ghost btn-sm" data-copy-css>Copy CSS</button>
+              <button class="btn btn-ghost btn-sm" data-download-css>Download style.css</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- ============ VIEW: FAVORITES ============ -->
+    <main class="dash-content" id="view-favorites" style="display:none;">
+      <div class="card-grid" data-favorites-grid></div>
+    </main>
+
+    <!-- ============ VIEW: LIBRARY ============ -->
+    <main class="dash-content" id="view-library" style="display:none;">
+      <div class="panel" data-library-table>
+        <table class="data-table">
+          <thead>
+            <tr><th>Design</th><th>Files</th><th>Components</th><th>Saved</th><th></th></tr>
+          </thead>
+          <tbody data-library-body></tbody>
+        </table>
+      </div>
+      <div data-library-empty></div>
+    </main>
+
+    <!-- ============ VIEW: PROFILE ============ -->
+    <main class="dash-content dash-content-narrow" id="view-profile" style="display:none;">
+      <div class="panel">
+        <div class="avatar-upload">
+          <div class="avatar-big" data-profile-initials>?</div>
+          <div>
+            <div style="font-weight:600;font-size:14.5px;margin-bottom:4px;">Profile photo</div>
+            <div style="font-size:12.5px;color:var(--muted);">Initials are generated automatically from your name.</div>
+          </div>
+        </div>
+
+        <form id="profileForm">
+          <div class="field">
+            <label for="pname">Full name</label>
+            <input type="text" id="pname" name="name">
+          </div>
+          <div class="field">
+            <label for="pemail">Email</label>
+            <input type="email" id="pemail" name="email">
+          </div>
+          <div class="field">
+            <label for="prole">Role</label>
+            <input type="text" id="prole" name="role" placeholder="e.g. Product Designer">
+          </div>
+          <div class="field">
+            <label for="pbio">Bio</label>
+            <input type="text" id="pbio" name="bio" placeholder="A short line about you">
+          </div>
+          <button type="submit" class="btn btn-primary">Save changes</button>
+        </form>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head"><div><h3>Change password</h3><p>Use at least 6 characters</p></div></div>
+        <form id="passwordForm">
+          <div class="field">
+            <label for="pwcurrent">Current password</label>
+            <input type="password" id="pwcurrent" name="current" autocomplete="current-password">
+          </div>
+          <div class="field">
+            <label for="pwnext">New password</label>
+            <input type="password" id="pwnext" name="next" autocomplete="new-password">
+          </div>
+          <button type="submit" class="btn btn-ghost">Update password</button>
+        </form>
+      </div>
+    </main>
+
+    <!-- ============ VIEW: SETTINGS ============ -->
+    <main class="dash-content dash-content-narrow" id="view-settings" style="display:none;" data-page="settings">
+      <div class="panel">
+        <div class="panel-head"><div><h3>Appearance</h3><p>Choose how DesignExtract looks on this device</p></div></div>
+        <div class="theme-pick">
+          <div class="theme-pick-opt" data-theme="light">
+            <div class="swatch-preview" style="background:linear-gradient(135deg,#F8F9FB,#FFFFFF);border:1px solid #E5E7EE;"></div>
+            <span>Light</span>
+          </div>
+          <div class="theme-pick-opt" data-theme="dark">
+            <div class="swatch-preview" style="background:linear-gradient(135deg,#111111,#24262E);"></div>
+            <span>Dark</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head"><div><h3>Extraction defaults</h3><p>Preferences applied to every new extraction</p></div></div>
+        <div class="setting-row">
+          <div class="setting-row-text"><div class="t">Default export format</div><div class="d">Which code tab opens first after an extraction</div></div>
+          <select data-setting="defaultFormat" style="padding:8px 12px;border-radius:var(--r-sm);border:1px solid var(--line-strong);background:var(--surface);color:var(--ink);">
+            <option value="html">HTML</option>
+            <option value="css">CSS</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head"><div><h3>Notifications</h3><p>Control what DesignExtract emails you about</p></div></div>
+        <div class="setting-row">
+          <div class="setting-row-text"><div class="t">Email notifications</div><div class="d">Get notified when an extraction finishes</div></div>
+          <label class="switch"><input type="checkbox" data-toggle="emailNotifs"><span class="track"></span></label>
+        </div>
+        <div class="setting-row">
+          <div class="setting-row-text"><div class="t">Product updates</div><div class="d">Occasional news about new features</div></div>
+          <label class="switch"><input type="checkbox" data-toggle="productUpdates"><span class="track"></span></label>
+        </div>
+      </div>
+
+      <div class="danger-zone">
+        <h3>Danger zone</h3>
+        <p>These actions are permanent and cannot be undone.</p>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;">
+          <button class="btn btn-ghost" data-clear-favorites>Clear all favorites</button>
+          <button class="btn btn-danger" data-delete-account>Delete account</button>
+        </div>
+      </div>
+    </main>
+
+  </div>
+</div>
+<!-- /dash-shell -->
+
+<!-- Confirm clear favorites -->
+<div class="modal-backdrop" id="clearFavModal">
+  <div class="modal-panel">
+    <h3>Clear all favorites?</h3>
+    <p>This removes every saved design from your Favorites and Code Library. This can't be undone.</p>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" data-close-modal>Cancel</button>
+      <button class="btn btn-danger" id="confirmClearFav">Clear favorites</button>
+    </div>
+  </div>
+</div>
+
+<!-- Confirm delete account -->
+<div class="modal-backdrop" id="deleteAccountModal">
+  <div class="modal-panel">
+    <h3>Delete your account?</h3>
+    <p>Your profile, favorites and settings will be permanently removed from this browser.</p>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" data-close-modal>Cancel</button>
+      <button class="btn btn-danger" id="confirmDeleteAccount">Delete account</button>
+    </div>
+  </div>
+</div>
+
+</div>
+<!-- /page-app -->
+
+<div class="toast-stack"></div>
+
+<script>
+/* ==========================================================================
+   DesignExtract — storage.js (unchanged)
+   ========================================================================== */
+/* ==========================================================================
+   DesignExtract — storage.js
+   Central LocalStorage access layer. Every other script reads/writes
+   through DXStore so the schema lives in one place, ready to be swapped
+   for real backend/API calls later (see extractor.js comments).
+   ========================================================================== */
+
+const DXStore = (() => {
+  const KEYS = {
+    ACCOUNTS: 'dx_accounts',
+    SESSION: 'dx_session',
+    FAVORITES: 'dx_favorites_',   // + userId
+    PROFILE: 'dx_profile_',       // + userId
+    SETTINGS: 'dx_settings_',     // + userId
+    THEME: 'dx_theme'
+  };
+
+  function read(key, fallback) {
+    try {
+      const raw = localStorage.getItem(key);
+      return raw ? JSON.parse(raw) : fallback;
+    } catch (e) {
+      console.warn('DXStore read error', key, e);
+      return fallback;
+    }
+  }
+
+  function write(key, value) {
+    try {
+      localStorage.setItem(key, JSON.stringify(value));
+      return true;
+    } catch (e) {
+      console.warn('DXStore write error', key, e);
+      return false;
+    }
+  }
+
+  /* ---------------- Accounts ---------------- */
+  function getAccounts() { return read(KEYS.ACCOUNTS, []); }
+  function saveAccounts(list) { return write(KEYS.ACCOUNTS, list); }
+
+  function findAccountByEmail(email) {
+    return getAccounts().find(a => a.email.toLowerCase() === String(email).toLowerCase());
+  }
+
+  function createAccount({ name, email, password }) {
+    const accounts = getAccounts();
+    const id = 'u_' + Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+    const account = { id, name, email, password, createdAt: new Date().toISOString() };
+    accounts.push(account);
+    saveAccounts(accounts);
+
+    write(KEYS.PROFILE + id, {
+      name, email,
+      role: 'Product Designer',
+      bio: 'Learning design systems from the best sites on the web.',
+      plan: 'Free'
+    });
+    write(KEYS.SETTINGS + id, {
+      theme: 'light',
+      emailNotifs: true,
+      productUpdates: false,
+      defaultFormat: 'html'
+    });
+    write(KEYS.FAVORITES + id, []);
+    return account;
+  }
+
+  /* ---------------- Session ---------------- */
+  function getSession() { return read(KEYS.SESSION, null); }
+  function setSession(userId) { return write(KEYS.SESSION, { userId, since: new Date().toISOString() }); }
+  function clearSession() { localStorage.removeItem(KEYS.SESSION); }
+
+  function getCurrentUser() {
+    const session = getSession();
+    if (!session) return null;
+    const account = getAccounts().find(a => a.id === session.userId);
+    return account || null;
+  }
+
+  function requireAuth(redirectTo) {
+    const user = getCurrentUser();
+    if (!user) {
+      window.location.href = redirectTo || 'login.html';
+      return null;
+    }
+    return user;
+  }
+
+  /* ---------------- Profile ---------------- */
+  function getProfile(userId) { return read(KEYS.PROFILE + userId, null); }
+  function saveProfile(userId, profile) { return write(KEYS.PROFILE + userId, profile); }
+
+  /* ---------------- Settings ---------------- */
+  function getSettings(userId) {
+    return read(KEYS.SETTINGS + userId, {
+      theme: 'light', emailNotifs: true, productUpdates: false,
+      defaultFormat: 'html'
+    });
+  }
+  function saveSettings(userId, settings) { return write(KEYS.SETTINGS + userId, settings); }
+
+  /* ---------------- Favorites ---------------- */
+  function getFavorites(userId) { return read(KEYS.FAVORITES + userId, []); }
+  function saveFavorites(userId, list) { return write(KEYS.FAVORITES + userId, list); }
+
+  function addFavorite(userId, extraction) {
+    const list = getFavorites(userId);
+    const entry = Object.assign({}, extraction, {
+      id: 'f_' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
+      savedAt: new Date().toISOString()
+    });
+    list.unshift(entry);
+    saveFavorites(userId, list);
+    return entry;
+  }
+
+  function removeFavorite(userId, favId) {
+    const list = getFavorites(userId).filter(f => f.id !== favId);
+    saveFavorites(userId, list);
+    return list;
+  }
+
+  function getFavoriteById(userId, favId) {
+    return getFavorites(userId).find(f => f.id === favId) || null;
+  }
+
+  /* ---------------- Theme (global, applies before login too) ---------------- */
+  function getTheme() { return localStorage.getItem(KEYS.THEME) || 'light'; }
+  function setTheme(theme) { localStorage.setItem(KEYS.THEME, theme); }
+
+  return {
+    KEYS, getAccounts, saveAccounts, findAccountByEmail, createAccount,
+    getSession, setSession, clearSession, getCurrentUser, requireAuth,
+    getProfile, saveProfile, getSettings, saveSettings,
+    getFavorites, saveFavorites, addFavorite, removeFavorite, getFavoriteById,
+    getTheme, setTheme
+  };
+})();
+
+/* Apply saved theme as early as possible on every page to avoid flash */
+(function applyStoredTheme() {
+  const theme = DXStore.getTheme();
+  if (theme === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+})();
+</script>
+
+<script>
+/* ==========================================================================
+   DesignExtract — script.js
+   Shared UI behavior used across marketing + auth + dashboard pages:
+   theme toggling, ripple micro-interactions, scroll reveal, header state,
+   mobile nav, FAQ accordion, smooth scroll.
+   (Adapted for single-file SPA: header auth-aware CTA now toggles a
+   data-route attribute instead of an href to a separate file.)
+   ========================================================================== */
+
+/* ---------------- Theme ---------------- */
+function dxApplyTheme(theme) {
+  if (theme === 'dark') {
+    document.documentElement.setAttribute('data-theme', 'dark');
+  } else {
+    document.documentElement.removeAttribute('data-theme');
+  }
+  DXStore.setTheme(theme);
+  const user = DXStore.getCurrentUser && DXStore.getCurrentUser();
+  if (user) {
+    const settings = DXStore.getSettings(user.id);
+    settings.theme = theme;
+    DXStore.saveSettings(user.id, settings);
+  }
+}
+
+function dxToggleTheme() {
+  const current = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+  dxApplyTheme(current === 'dark' ? 'light' : 'dark');
+}
+
+function dxInitThemeToggles() {
+  document.querySelectorAll('[data-theme-toggle]').forEach(btn => {
+    btn.addEventListener('click', dxToggleTheme);
+  });
+}
+
+/* ---------------- Ripple micro-interaction ---------------- */
+function dxInitRipples() {
+  document.querySelectorAll('.btn, .feature-card, .price-card, .icon-btn').forEach(el => {
+    el.classList.add('ripple-surface');
+    el.addEventListener('click', function (e) {
+      const rect = this.getBoundingClientRect();
+      const ripple = document.createElement('span');
+      const size = Math.max(rect.width, rect.height) * 1.2;
+      ripple.className = 'ripple';
+      ripple.style.width = ripple.style.height = size + 'px';
+      ripple.style.left = (e.clientX - rect.left - size / 2) + 'px';
+      ripple.style.top = (e.clientY - rect.top - size / 2) + 'px';
+      this.appendChild(ripple);
+      setTimeout(() => ripple.remove(), 650);
+    });
+  });
+}
+
+/* ---------------- Scroll reveal ---------------- */
+function dxInitReveal() {
+  const items = document.querySelectorAll('.reveal');
+  if (!items.length) return;
+  if (!('IntersectionObserver' in window)) {
+    items.forEach(i => i.classList.add('in-view'));
+    return;
+  }
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('in-view');
+        io.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.15 });
+  items.forEach(i => io.observe(i));
+}
+
+/* ---------------- Header scroll state ---------------- */
+function dxInitHeaderScroll() {
+  const header = document.querySelector('.site-header');
+  if (!header) return;
+  const onScroll = () => header.classList.toggle('scrolled', window.scrollY > 8);
+  onScroll();
+  window.addEventListener('scroll', onScroll, { passive: true });
+}
+
+/* ---------------- Mobile nav ---------------- */
+function dxInitMobileNav() {
+  const toggle = document.querySelector('.nav-toggle');
+  const links = document.querySelector('.nav-links');
+  if (!toggle || !links) return;
+  toggle.addEventListener('click', () => {
+    const open = links.classList.toggle('mobile-open');
+    toggle.setAttribute('aria-expanded', open);
+  });
+}
+
+/* ---------------- FAQ accordion ---------------- */
+function dxInitFaq() {
+  document.querySelectorAll('.faq-item').forEach(item => {
+    const btn = item.querySelector('.faq-q');
+    if (!btn) return;
+    btn.addEventListener('click', () => {
+      const isOpen = item.getAttribute('data-open') === 'true';
+      item.closest('.faq-list').querySelectorAll('.faq-item').forEach(i => i.setAttribute('data-open', 'false'));
+      item.setAttribute('data-open', isOpen ? 'false' : 'true');
+    });
+  });
+}
+
+/* ---------------- Smooth in-page anchors ---------------- */
+function dxInitAnchorScroll() {
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', (e) => {
+      const id = a.getAttribute('href');
+      if (id.length < 2) return;
+      if (a.hasAttribute('data-route')) return; // handled by router, not in-page scroll
+      const target = document.querySelector(id);
+      if (target) {
+        e.preventDefault();
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        document.querySelector('.nav-links')?.classList.remove('mobile-open');
+      }
+    });
+  });
+}
+
+/* ---------------- Header auth-aware CTA ---------------- */
+function dxInitHeaderAuthState() {
+  const cta = document.querySelector('[data-auth-cta]');
+  if (!cta) return;
+  const user = DXStore.getCurrentUser();
+  if (user) {
+    cta.textContent = 'Go to Dashboard';
+    cta.dataset.route = 'dashboard';
+  } else {
+    cta.textContent = 'Get started';
+    cta.dataset.route = 'signup';
+  }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  dxInitThemeToggles();
+  dxInitRipples();
+  dxInitReveal();
+  dxInitHeaderScroll();
+  dxInitMobileNav();
+  dxInitFaq();
+  dxInitAnchorScroll();
+  dxInitHeaderAuthState();
+});
+</script>
+
+<script>
+/* ==========================================================================
+   DesignExtract — auth.js
+   Email sign up / login against LocalStorage-backed accounts.
+   (Adapted for single-file SPA: field ids are namespaced per form to avoid
+   collisions now that login + signup live in the same document, and
+   navigation uses dxNavigate() instead of window.location.href.)
+   ========================================================================== */
+
+function dxShowFormMsg(el, message, type) {
+  el.textContent = message;
+  el.className = 'form-msg show ' + type;
+}
+
+function dxSetFieldError(fieldEl, message) {
+  fieldEl.classList.add('has-error');
+  const err = fieldEl.querySelector('.field-error');
+  if (err) err.textContent = message;
+}
+
+function dxClearFieldErrors(form) {
+  form.querySelectorAll('.field').forEach(f => f.classList.remove('has-error'));
+}
+
+function dxValidEmail(email) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+}
+
+/* ---------------- Signup ---------------- */
+function dxInitSignupForm() {
+  const form = document.getElementById('signupForm');
+  if (!form) return;
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    dxClearFieldErrors(form);
+    const msg = document.getElementById('signupFormMsg');
+
+    const name = form.name.value.trim();
+    const email = form.email.value.trim();
+    const password = form.password.value;
+    const confirm = form.confirm.value;
+
+    let hasError = false;
+
+    if (name.length < 2) {
+      dxSetFieldError(form.name.closest('.field'), 'Enter your full name.');
+      hasError = true;
+    }
+    if (!dxValidEmail(email)) {
+      dxSetFieldError(form.email.closest('.field'), 'Enter a valid email address.');
+      hasError = true;
+    } else if (DXStore.findAccountByEmail(email)) {
+      dxSetFieldError(form.email.closest('.field'), 'An account with this email already exists.');
+      hasError = true;
+    }
+    if (password.length < 6) {
+      dxSetFieldError(form.password.closest('.field'), 'Use at least 6 characters.');
+      hasError = true;
+    }
+    if (confirm !== password) {
+      dxSetFieldError(form.confirm.closest('.field'), 'Passwords do not match.');
+      hasError = true;
+    }
+
+    if (hasError) {
+      dxShowFormMsg(msg, 'Please fix the highlighted fields.', 'error');
+      return;
+    }
+
+    const submitBtn = form.querySelector('button[type="submit"]');
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<span class="spinner"></span> Creating account…';
+
+    setTimeout(() => {
+      const account = DXStore.createAccount({ name, email, password });
+      DXStore.setSession(account.id);
+      dxShowFormMsg(msg, 'Account created — redirecting…', 'success');
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Create account';
+      setTimeout(() => { dxNavigate('dashboard'); }, 500);
+    }, 600);
+  });
+}
+
+/* ---------------- Login ---------------- */
+function dxInitLoginForm() {
+  const form = document.getElementById('loginForm');
+  if (!form) return;
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    dxClearFieldErrors(form);
+    const msg = document.getElementById('loginFormMsg');
+
+    const email = form.email.value.trim();
+    const password = form.password.value;
+
+    let hasError = false;
+    if (!dxValidEmail(email)) {
+      dxSetFieldError(form.email.closest('.field'), 'Enter a valid email address.');
+      hasError = true;
+    }
+    if (!password) {
+      dxSetFieldError(form.password.closest('.field'), 'Enter your password.');
+      hasError = true;
+    }
+    if (hasError) {
+      dxShowFormMsg(msg, 'Please fix the highlighted fields.', 'error');
+      return;
+    }
+
+    const account = DXStore.findAccountByEmail(email);
+    if (!account || account.password !== password) {
+      dxShowFormMsg(msg, 'Email or password is incorrect.', 'error');
+      return;
+    }
+
+    const submitBtn = form.querySelector('button[type="submit"]');
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<span class="spinner dark"></span> Signing in…';
+
+    setTimeout(() => {
+      DXStore.setSession(account.id);
+      dxShowFormMsg(msg, 'Welcome back — redirecting…', 'success');
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Log in';
+      setTimeout(() => { dxNavigate('dashboard'); }, 400);
+    }, 500);
+  });
+}
+
+/* ---------------- Logout (used from dashboard pages) ---------------- */
+function dxLogout() {
+  DXStore.clearSession();
+  DX_USER = null;
+  dxNavigate('login');
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  dxInitSignupForm();
+  dxInitLoginForm();
+});
+</script>
+
+<script>
+/* ==========================================================================
+   DesignExtract — ui.js
+   Dashboard shell (sidebar/topbar/auth guard), toast + modal system, and
+   page-specific rendering for Dashboard Home, Favorites, Library, Profile
+   and Settings.
+   (Adapted for single-file SPA: the shell + all views now live in one
+   document and are shown/hidden by the router, so event listeners that
+   used to be bound exactly once per page-load are guarded with a
+   `dataset.bound` flag to avoid being attached twice, while the data
+   shown on screen is still refreshed from LocalStorage every time a view
+   becomes active.)
+   ========================================================================== */
+
+let DX_USER = null;
+let dxShellBound = false;
+
+/* ---------------- Toasts ---------------- */
+function dxToast(message, variant) {
+  let stack = document.querySelector('.toast-stack');
+  if (!stack) {
+    stack = document.createElement('div');
+    stack.className = 'toast-stack';
+    document.body.appendChild(stack);
+  }
+  const el = document.createElement('div');
+  el.className = 'toast';
+  const iconPath = variant === 'error'
+    ? '<circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/>'
+    : '<path d="M20 6 9 17l-5-5"/>';
+  el.innerHTML = `<svg class="icon" viewBox="0 0 24 24">${iconPath}</svg><span>${message}</span>`;
+  if (variant === 'error') el.querySelector('.icon').style.color = '#E08279';
+  stack.appendChild(el);
+  setTimeout(() => {
+    el.style.transition = 'opacity 300ms ease, transform 300ms ease';
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(8px)';
+    setTimeout(() => el.remove(), 300);
+  }, 2600);
+}
+
+/* ---------------- Modal ---------------- */
+function dxOpenModal(id) { document.getElementById(id)?.classList.add('show'); }
+function dxCloseModal(id) { document.getElementById(id)?.classList.remove('show'); }
+
+function dxInitModalDismiss() {
+  document.querySelectorAll('.modal-backdrop').forEach(backdrop => {
+    backdrop.addEventListener('click', (e) => {
+      if (e.target === backdrop) backdrop.classList.remove('show');
+    });
+  });
+  document.querySelectorAll('[data-close-modal]').forEach(btn => {
+    btn.addEventListener('click', () => btn.closest('.modal-backdrop')?.classList.remove('show'));
+  });
+}
+
+/* ---------------- Dashboard shell ---------------- */
+function dxInitials(name) {
+  if (!name) return '?';
+  return name.trim().split(/\s+/).slice(0, 2).map(w => w[0]).join('').toUpperCase();
+}
+
+function dxInitDashboardShell() {
+  const shell = document.querySelector('.dash-shell');
+  if (!shell) return;
+
+  DX_USER = DXStore.getCurrentUser();
+  if (!DX_USER) return;
+
+  const profile = DXStore.getProfile(DX_USER.id) || { name: DX_USER.name, email: DX_USER.email };
+  const settings = DXStore.getSettings(DX_USER.id);
+  if (settings.theme === 'dark') dxApplyTheme('dark');
+
+  document.querySelectorAll('[data-user-name]').forEach(el => el.textContent = profile.name);
+  document.querySelectorAll('[data-user-email]').forEach(el => el.textContent = profile.email);
+  document.querySelectorAll('[data-user-initials]').forEach(el => el.textContent = dxInitials(profile.name));
+  document.querySelectorAll('[data-user-role]').forEach(el => el.textContent = profile.role || 'Member');
+
+  if (dxShellBound) return;
+  dxShellBound = true;
+
+  // Sidebar collapse (desktop)
+  const collapseBtn = document.querySelector('.side-collapse-btn');
+  if (collapseBtn) {
+    const collapsed = localStorage.getItem('dx_sidebar_collapsed') === 'true';
+    if (collapsed) shell.classList.add('sidebar-collapsed');
+    collapseBtn.addEventListener('click', () => {
+      const isCollapsed = shell.classList.toggle('sidebar-collapsed');
+      localStorage.setItem('dx_sidebar_collapsed', isCollapsed);
+    });
+  }
+
+  // Mobile nav open/close
+  const mobileBtn = document.querySelector('.mobile-menu-btn');
+  if (mobileBtn) {
+    mobileBtn.addEventListener('click', () => shell.classList.add('mobile-nav-open'));
+  }
+  document.addEventListener('click', (e) => {
+    if (!shell.classList.contains('mobile-nav-open')) return;
+    const sidebar = document.querySelector('.dash-sidebar');
+    if (sidebar && !sidebar.contains(e.target) && !e.target.closest('.mobile-menu-btn')) {
+      shell.classList.remove('mobile-nav-open');
+    }
+  });
+
+  // Logout
+  document.querySelectorAll('[data-logout]').forEach(btn => {
+    btn.addEventListener('click', dxLogout);
+  });
+
+  dxInitModalDismiss();
+}
+
+/* ---------------- Dashboard Home ---------------- */
+function dxInitDashboardHome() {
+  const el = document.querySelector('[data-page="dashboard-home"]');
+  if (!el || !DX_USER) return;
+
+  const favorites = DXStore.getFavorites(DX_USER.id);
+  const totalComponents = favorites.reduce((sum, f) => sum + (f.components ? f.components.length : 0), 0);
+  const totalColors = favorites.reduce((sum, f) => sum + (f.palette ? f.palette.length : 0), 0);
+
+  const statEls = {
+    extractions: document.querySelector('[data-stat="extractions"]'),
+    favorites: document.querySelector('[data-stat="favorites"]'),
+    colors: document.querySelector('[data-stat="colors"]'),
+    components: document.querySelector('[data-stat="components"]')
+  };
+  if (statEls.extractions) statEls.extractions.textContent = favorites.length;
+  if (statEls.favorites) statEls.favorites.textContent = favorites.length;
+  if (statEls.colors) statEls.colors.textContent = totalColors;
+  if (statEls.components) statEls.components.textContent = totalComponents;
+
+  const recentWrap = document.querySelector('[data-recent-list]');
+  if (recentWrap) {
+    if (!favorites.length) {
+      recentWrap.innerHTML = dxEmptyStateHTML(
+        'No extractions yet',
+        'Extract your first website design to see it appear here.',
+        'extractor', 'Start extracting'
+      );
+    } else {
+      recentWrap.innerHTML = favorites.slice(0, 4).map(f => dxFavCardHTML(f)).join('');
+      dxInitFavCardActions(recentWrap);
+    }
+  }
+}
+
+function dxEmptyStateHTML(title, desc, route, cta) {
+  return `
+    <div class="empty-state">
+      <div class="empty-icon">
+        <svg class="icon" viewBox="0 0 24 24" style="width:28px;height:28px;"><path d="M4 4h16v16H4z"/><path d="M4 9h16M9 4v16"/></svg>
+      </div>
+      <h3>${title}</h3>
+      <p>${desc}</p>
+      ${route ? `<a href="#" data-route="${route}" class="btn btn-accent btn-sm">${cta}</a>` : ''}
+    </div>`;
+}
+
+/* ---------------- Favorites card (shared by home + favorites page) ---------------- */
+function dxFavCardHTML(fav) {
+  const palette = (fav.palette || []).slice(0, 5).map(c => typeof c === 'string' ? c : c.hex).filter(Boolean);
+  return `
+  <div class="fav-card hover-lift reveal in-view" data-fav-id="${fav.id}">
+    <div class="fav-thumb">
+      <div class="scan-mock-body">
+        <div class="scan-block scan-fake-nav" style="background:${palette[0] || '#e5e7ee'}"></div>
+        <div class="scan-block scan-fake-hero" style="background:${palette[1] || '#eef0f5'}"></div>
+        <div class="scan-fake-row">
+          <div class="scan-block" style="background:${palette[2] || '#e5e7ee'}"></div>
+          <div class="scan-block" style="background:${palette[3] || '#e5e7ee'}"></div>
+        </div>
+      </div>
+    </div>
+    <div class="fav-body">
+      <div class="fav-title">${fav.title}</div>
+      <div class="fav-url mono">${fav.url}</div>
+      <div class="fav-swatches">
+        ${palette.map(c => `<span style="background:${c}"></span>`).join('')}
+      </div>
+      <div class="fav-actions">
+        <a class="btn btn-ghost btn-sm" href="#" data-route="extractor" data-fav="${fav.id}">View</a>
+        <button class="btn btn-ghost btn-sm" data-remove-fav="${fav.id}">
+          <svg class="icon" viewBox="0 0 24 24" style="width:15px;height:15px;"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m2 0-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>`;
+}
+
+function dxInitFavCardActions(scope) {
+  (scope || document).querySelectorAll('[data-remove-fav]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const id = btn.getAttribute('data-remove-fav');
+      DXStore.removeFavorite(DX_USER.id, id);
+      dxToast('Removed from Favorites');
+      btn.closest('[data-fav-id]')?.remove();
+      dxRefreshEmptyStates();
+    });
+  });
+}
+
+function dxRefreshEmptyStates() {
+  const favGrid = document.querySelector('[data-favorites-grid]');
+  if (favGrid && !favGrid.querySelector('[data-fav-id]')) {
+    favGrid.outerHTML = `<div data-favorites-grid>${dxEmptyStateHTML('No favorites saved', 'Save an extracted design to build your inspiration library.', 'extractor', 'Extract a website')}</div>`;
+  }
+  const libBody = document.querySelector('[data-library-body]');
+  if (libBody && !libBody.querySelector('tr')) {
+    document.querySelector('[data-library-empty]')?.classList.remove('hidden-el');
+    document.querySelector('[data-library-table]')?.classList.add('hidden-el');
+  }
+}
+
+/* ---------------- Favorites page ---------------- */
+function dxInitFavoritesPage() {
+  const grid = document.querySelector('[data-favorites-grid]');
+  if (!grid || !DX_USER) return;
+  const favorites = DXStore.getFavorites(DX_USER.id);
+  if (!favorites.length) {
+    grid.innerHTML = dxEmptyStateHTML('No favorites saved', 'Save an extracted design to build your inspiration library.', 'extractor', 'Extract a website');
+    return;
+  }
+  grid.innerHTML = favorites.map(f => dxFavCardHTML(f)).join('');
+  dxInitFavCardActions(grid);
+}
+
+/* ---------------- Library page ---------------- */
+function dxInitLibraryPage() {
+  const body = document.querySelector('[data-library-body]');
+  if (!body || !DX_USER) return;
+  const favorites = DXStore.getFavorites(DX_USER.id);
+
+  document.querySelector('[data-library-table]')?.classList.remove('hidden-el');
+  document.querySelector('[data-library-empty]').innerHTML = '';
+
+  if (!favorites.length) {
+    document.querySelector('[data-library-table]')?.classList.add('hidden-el');
+    document.querySelector('[data-library-empty]').innerHTML = dxEmptyStateHTML('Your code library is empty', 'Generated HTML & CSS from saved favorites will show up here.', 'extractor', 'Extract a website');
+    return;
+  }
+
+  body.innerHTML = favorites.map(f => `
+    <tr data-fav-id="${f.id}">
+      <td>
+        <div style="font-weight:600;">${f.title}</div>
+        <div class="mono" style="font-size:11.5px;color:var(--muted);">${f.url}</div>
+      </td>
+      <td><span class="chip html">HTML</span> <span class="chip css">CSS</span></td>
+      <td>${(f.components || []).length} components</td>
+      <td>${new Date(f.savedAt).toLocaleDateString()}</td>
+      <td style="text-align:right;">
+        <a class="btn btn-ghost btn-sm" href="#" data-route="extractor" data-fav="${f.id}">Open</a>
+      </td>
+    </tr>`).join('');
+}
+
+/* ---------------- Profile page ---------------- */
+function dxInitProfilePage() {
+  const form = document.getElementById('profileForm');
+  if (!form || !DX_USER) return;
+  const profile = DXStore.getProfile(DX_USER.id) || {};
+
+  form.name.value = profile.name || '';
+  form.email.value = profile.email || '';
+  form.role.value = profile.role || '';
+  form.bio.value = profile.bio || '';
+  document.querySelectorAll('[data-profile-initials]').forEach(el => el.textContent = dxInitials(profile.name));
+
+  if (!form.dataset.bound) {
+    form.dataset.bound = 'true';
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const existing = DXStore.getProfile(DX_USER.id) || {};
+      const updated = {
+        name: form.name.value.trim() || existing.name,
+        email: form.email.value.trim() || existing.email,
+        role: form.role.value.trim(),
+        bio: form.bio.value.trim(),
+        plan: existing.plan
+      };
+      DXStore.saveProfile(DX_USER.id, updated);
+
+      // keep account name/email in sync
+      const accounts = DXStore.getAccounts();
+      const idx = accounts.findIndex(a => a.id === DX_USER.id);
+      if (idx > -1) {
+        accounts[idx].name = updated.name;
+        accounts[idx].email = updated.email;
+        DXStore.saveAccounts(accounts);
+      }
+      document.querySelectorAll('[data-user-name]').forEach(el => el.textContent = updated.name);
+      document.querySelectorAll('[data-user-initials]').forEach(el => el.textContent = dxInitials(updated.name));
+      dxToast('Profile updated');
+    });
+  }
+
+  const pwForm = document.getElementById('passwordForm');
+  if (pwForm && !pwForm.dataset.bound) {
+    pwForm.dataset.bound = 'true';
+    pwForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const current = pwForm.current.value;
+      const next = pwForm.next.value;
+      const accounts = DXStore.getAccounts();
+      const idx = accounts.findIndex(a => a.id === DX_USER.id);
+      if (idx === -1 || accounts[idx].password !== current) {
+        dxToast('Current password is incorrect', 'error');
+        return;
+      }
+      if (next.length < 6) {
+        dxToast('New password must be at least 6 characters', 'error');
+        return;
+      }
+      accounts[idx].password = next;
+      DXStore.saveAccounts(accounts);
+      pwForm.reset();
+      dxToast('Password changed');
+    });
+  }
+}
+
+/* ---------------- Settings page ---------------- */
+function dxInitSettingsPage() {
+  const wrap = document.querySelector('[data-page="settings"]');
+  if (!wrap || !DX_USER) return;
+  const settings = DXStore.getSettings(DX_USER.id);
+
+  // Theme picker — sync active state every visit
+  wrap.querySelectorAll('.theme-pick-opt').forEach(opt => {
+    opt.classList.toggle('active', opt.dataset.theme === (settings.theme || 'light'));
+  });
+
+  // Toggles — sync checked state every visit
+  const toggleMap = {
+    emailNotifs: '[data-toggle="emailNotifs"]',
+    productUpdates: '[data-toggle="productUpdates"]'
+  };
+  Object.entries(toggleMap).forEach(([key, sel]) => {
+    const input = wrap.querySelector(sel);
+    if (input) input.checked = !!settings[key];
+  });
+
+  // Default format — sync value every visit
+  const formatSelect = wrap.querySelector('[data-setting="defaultFormat"]');
+  if (formatSelect) formatSelect.value = settings.defaultFormat || 'html';
+
+  if (wrap.dataset.bound) return;
+  wrap.dataset.bound = 'true';
+
+  wrap.querySelectorAll('.theme-pick-opt').forEach(opt => {
+    opt.addEventListener('click', () => {
+      wrap.querySelectorAll('.theme-pick-opt').forEach(o => o.classList.remove('active'));
+      opt.classList.add('active');
+      const theme = opt.dataset.theme;
+      dxApplyTheme(theme);
+      const s = DXStore.getSettings(DX_USER.id);
+      s.theme = theme;
+      DXStore.saveSettings(DX_USER.id, s);
+      dxToast('Theme updated');
+    });
+  });
+
+  Object.entries(toggleMap).forEach(([key, sel]) => {
+    const input = wrap.querySelector(sel);
+    if (!input) return;
+    input.addEventListener('change', () => {
+      const s = DXStore.getSettings(DX_USER.id);
+      s[key] = input.checked;
+      DXStore.saveSettings(DX_USER.id, s);
+      dxToast('Settings saved');
+    });
+  });
+
+  if (formatSelect) {
+    formatSelect.addEventListener('change', () => {
+      const s = DXStore.getSettings(DX_USER.id);
+      s.defaultFormat = formatSelect.value;
+      DXStore.saveSettings(DX_USER.id, s);
+      dxToast('Settings saved');
+    });
+  }
+
+  // Danger zone
+  const clearBtn = wrap.querySelector('[data-clear-favorites]');
+  if (clearBtn) {
+    clearBtn.addEventListener('click', () => dxOpenModal('clearFavModal'));
+  }
+  const confirmClear = document.getElementById('confirmClearFav');
+  if (confirmClear) {
+    confirmClear.addEventListener('click', () => {
+      DXStore.saveFavorites(DX_USER.id, []);
+      dxCloseModal('clearFavModal');
+      dxToast('All favorites cleared');
+      dxInitDashboardHome();
+      dxInitFavoritesPage();
+      dxInitLibraryPage();
+    });
+  }
+
+  const deleteBtn = wrap.querySelector('[data-delete-account]');
+  if (deleteBtn) {
+    deleteBtn.addEventListener('click', () => dxOpenModal('deleteAccountModal'));
+  }
+  const confirmDelete = document.getElementById('confirmDeleteAccount');
+  if (confirmDelete) {
+    confirmDelete.addEventListener('click', () => {
+      const accounts = DXStore.getAccounts().filter(a => a.id !== DX_USER.id);
+      DXStore.saveAccounts(accounts);
+      localStorage.removeItem(DXStore.KEYS.FAVORITES + DX_USER.id);
+      localStorage.removeItem(DXStore.KEYS.PROFILE + DX_USER.id);
+      localStorage.removeItem(DXStore.KEYS.SETTINGS + DX_USER.id);
+      DXStore.clearSession();
+      DX_USER = null;
+      dxCloseModal('deleteAccountModal');
+      dxNavigate('index');
+    });
+  }
+}
+</script>
+
+<script>
+/* ==========================================================================
+   DesignExtract — extractor.js
+   Live website design extraction client.
+   (Adapted for single-file SPA: loading a saved favorite by id — previously
+   done via a `?fav=` URL query param — is now triggered by the router via
+   dxLoadFavIntoExtractor(), and the form/tab/button listeners are bound
+   once, guarded by a `dataset.bound` flag.)
+   ========================================================================== */
+
+/* ---------------- Deterministic PRNG seeded by URL ---------------- */
+function dxHashString(str) {
+  let h = 2166136261;
+  for (let i = 0; i < str.length; i++) {
+    h ^= str.charCodeAt(i);
+    h = Math.imul(h, 16777619);
+  }
+  return h >>> 0;
+}
+
+function dxMulberry32(seed) {
+  return function () {
+    seed |= 0; seed = (seed + 0x6D2B79F5) | 0;
+    let t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+function dxHslStr(h, s, l) { return `hsl(${Math.round(h)}, ${Math.round(s)}%, ${Math.round(l)}%)`; }
+
+const FONT_PAIRS = [
+  ['Söhne', 'Söhne'], ['General Sans', 'Inter'], ['Neue Montreal', 'Inter'],
+  ['Fraunces', 'Söhne'], ['Space Grotesk', 'Inter'], ['Aeonik', 'Aeonik'],
+  ['Editorial New', 'Inter'], ['Cabinet Grotesk', 'Satoshi']
+];
+const NAV_STYLES = ['Sticky glass navbar', 'Solid top navbar', 'Transparent-to-solid on scroll', 'Sidebar navigation'];
+const BTN_SHAPES = ['Pill (full radius)', 'Rounded 8px', 'Rounded 12px', 'Sharp corners'];
+const CARD_STYLES = ['Soft shadow + 1px border', 'Flat with border only', 'Elevated shadow, no border', 'Glassmorphism'];
+const SPACING_SCALES = [
+  [4, 8, 16, 24, 32, 48, 64], [8, 12, 20, 32, 48, 64, 96], [4, 8, 12, 20, 32, 56, 80]
+];
+
+function buildExtraction(rawUrl) {
+  const url = rawUrl.trim();
+  const hostname = (() => {
+    try { return new URL(url.match(/^https?:\/\//) ? url : 'https://' + url).hostname; }
+    catch (e) { return url.replace(/^https?:\/\//, '').split('/')[0]; }
+  })();
+
+  const seed = dxHashString(hostname);
+  const rand = dxMulberry32(seed);
+  const pick = (arr) => arr[Math.floor(rand() * arr.length)];
+
+  const baseHue = Math.floor(rand() * 360);
+  const accentHue = (baseHue + 130 + Math.floor(rand() * 60)) % 360;
+
+  const palette = [
+    { name: 'Primary', hex: dxHslStr(baseHue, 18, 14) },
+    { name: 'Background', hex: dxHslStr(baseHue, 25, 97) },
+    { name: 'Accent', hex: dxHslStr(accentHue, 62, 58) },
+    { name: 'Accent Deep', hex: dxHslStr(accentHue, 55, 42) },
+    { name: 'Surface', hex: dxHslStr(baseHue, 15, 100) },
+    { name: 'Muted', hex: dxHslStr(baseHue, 10, 45) }
+  ];
+
+  const fonts = pick(FONT_PAIRS);
+  const radiusBase = [4, 8, 12, 16, 20, 24][Math.floor(rand() * 6)];
+  const spacing = pick(SPACING_SCALES);
+
+  const components = [
+    { type: 'Navigation', desc: pick(NAV_STYLES) },
+    { type: 'Buttons', desc: pick(BTN_SHAPES) },
+    { type: 'Cards', desc: pick(CARD_STYLES) },
+    { type: 'Inputs', desc: `Border radius ${Math.max(6, radiusBase - 4)}px, 1px border` },
+    { type: 'Footer', desc: rand() > 0.5 ? 'Multi-column footer with newsletter' : 'Simple centered footer' }
+  ];
+
+  return {
+    url, hostname, title: hostname.replace(/^www\./, ''),
+    palette, fonts: { display: fonts[0], body: fonts[1] },
+    radius: radiusBase, spacing, components,
+    extractedAt: new Date().toISOString()
+  };
+}
+
+
+/* ---------------- Real extraction API client ----------------
+   The browser cannot safely inspect arbitrary cross-origin websites.
+   This client delegates extraction to the backend Playwright service.
+*/
+// On Vercel the API lives on the same deployment at /api/extract.
+// Keeping this relative also makes preview deployments work automatically.
+const DX_API_BASE = String(window.DX_API_BASE || '').replace(/\/$/, '');
+const DX_EXTRACTION_TIMEOUT = 105000;
+
+function dxNormalizeExtraction(payload, url) {
+  const ex = payload?.extraction || payload?.data || payload || {};
+  const f = ex.fonts || {};
+  const toArrayFont = v => Array.isArray(v) ? v : [v || 'sans-serif'];
+  return {
+    ...ex,
+    url: ex.url || url,
+    hostname: ex.hostname || (() => { try { return new URL(url).hostname; } catch { return url; } })(),
+    title: ex.title || ex.hostname || url,
+    palette: ex.palette || [],
+    fonts: { ...f, display: toArrayFont(f.display), body: toArrayFont(f.body), families: f.families || [] },
+    radius: ex.radius ?? 8,
+    radii: ex.radii || [], spacing: ex.spacing || [], shadows: ex.shadows || [],
+    components: ex.components || [], layout: ex.layout || {}, semantic: ex.semantic || {},
+    assets: ex.assets || {}, reconstructedHtml: ex.reconstructedHtml || '', reconstruction: ex.reconstruction || {}, cssVariables: ex.cssVariables || {}, metrics: ex.metrics || {},
+    extractedAt: ex.extractedAt || new Date().toISOString(),
+    raw: ex
+  };
+}
+
+async function dxRealExtraction(url, { onStep, onDone, onError }) {
+  const steps = ['Opening target', 'Reading DOM & CSS', 'Detecting design tokens', 'Mapping typography', 'Analyzing components'];
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), DX_EXTRACTION_TIMEOUT);
+
+  try {
+    onStep?.(0);
+
+    let response;
+    try {
+      response = await fetch(`${DX_API_BASE}/api/extract`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify({ url }),
+        signal: controller.signal
+      });
+    } catch (networkError) {
+      if (networkError?.name === 'AbortError') {
+        throw new Error('Extraction timed out. The target website took too long to analyze.');
+      }
+      throw new Error('Could not reach the extraction API. Check the Vercel deployment logs and try again.');
+    }
+
+    onStep?.(1);
+
+    const contentType = response.headers.get('content-type') || '';
+    let payload = {};
+    if (contentType.includes('application/json')) {
+      payload = await response.json().catch(() => ({}));
+    } else {
+      const text = await response.text().catch(() => '');
+      payload = { error: text.slice(0, 300) };
+    }
+
+    if (!response.ok) {
+      throw new Error(payload?.error || `Extraction failed (${response.status})`);
+    }
+
+    if (!payload?.extraction && !payload?.data) {
+      throw new Error('The extraction API returned an empty result.');
+    }
+
+    onStep?.(2); await new Promise(r => setTimeout(r, 80));
+    onStep?.(3); await new Promise(r => setTimeout(r, 80));
+    onStep?.(4);
+    onDone?.(dxNormalizeExtraction(payload, url));
+  } catch (error) {
+    console.error('DesignExtract extraction error:', error);
+    onError?.(error);
+  } finally {
+    clearTimeout(timeoutId);
+  }
+}
+
+function escapeHtml(str) { return String(str).replace(/[&<>]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[c])); }
+function safeCss(str) { return String(str || '').replace(/[{}]/g,'').slice(0,500); }
+
+function generateHTML(ex) {
+  if (ex.reconstructedHtml) return ex.reconstructedHtml;
+  const components = ex.components || [];
+  const nav = components.find(c=>c.type==='Navigation');
+  const headings = components.find(c=>c.type==='Headings');
+  const buttons = components.find(c=>c.type==='Buttons');
+  const cards = components.find(c=>c.type==='Cards');
+  const footer = components.find(c=>c.type==='Footer');
+  const headingText = headings?.samples?.[0]?.text || 'Extracted heading';
+  const buttonText = buttons?.samples?.[0]?.text || 'Continue';
+  const cardSamples = cards?.samples?.slice(0,3) || [];
+  return `<!-- DesignExtract v3 fallback reconstruction from ${escapeHtml(ex.hostname)} -->
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${escapeHtml(ex.title)}</title><link rel="stylesheet" href="style.css"></head><body>
+${nav ? `<header class="dx-nav"><div class="dx-container"><div class="dx-brand">${escapeHtml(ex.title)}</div><nav>${(nav.samples?.[0]?.text || 'Navigation').split(/\s+/).slice(0,5).map(x=>`<a href="#">${escapeHtml(x)}</a>`).join(' ')}</nav></div></header>` : ''}
+<main><section class="dx-hero dx-container"><h1>${escapeHtml(headingText)}</h1>${buttons ? `<button class="dx-button">${escapeHtml(buttonText)}</button>` : ''}</section>
+${cardSamples.length ? `<section class="dx-cards dx-container">${cardSamples.map((c,i)=>`<article class="dx-card"><h2>${escapeHtml(c.text || `Card ${i+1}`)}</h2></article>`).join('')}</section>` : ''}</main>
+${footer ? `<footer class="dx-footer">${escapeHtml(footer.samples?.[0]?.text || 'Footer')}</footer>` : ''}</body></html>`;
+}
+
+function generateCSS(ex) {
+  const palette = ex.palette || [];
+  const color = i => palette[i]?.hex || ['#111827','#ffffff','#2563eb','#e5e7eb'][i] || '#000';
+  const font = ex.fonts?.families?.[0] || ex.fonts?.body?.[0] || 'sans-serif';
+  const space = ex.spacing?.length ? ex.spacing : [4,8,16,24,32,48,64];
+  const vars = Object.entries(ex.cssVariables || {}).slice(0,40).map(([k,v])=>`  ${k}: ${safeCss(v)};`).join('\n');
+  return `/* DesignExtract v2 — measured tokens from ${ex.hostname} */\n:root {\n  --dx-color-1: ${color(0)};\n  --dx-color-2: ${color(1)};\n  --dx-color-3: ${color(2)};\n  --dx-color-4: ${color(3)};\n  --dx-font-body: ${JSON.stringify(font)};\n  --dx-radius: ${ex.radius || 8}px;\n${space.map((v,i)=>`  --dx-space-${i+1}: ${v}px;`).join('\n')}\n${vars}\n}\n*{box-sizing:border-box} body{margin:0;font-family:var(--dx-font-body),sans-serif;color:var(--dx-color-1);background:var(--dx-color-2)} .dx-container{width:min(1120px,calc(100% - 40px));margin:auto}.dx-nav{border-bottom:1px solid color-mix(in srgb,var(--dx-color-1) 12%,transparent);padding:var(--dx-space-4,24px) 0}.dx-nav .dx-container{display:flex;align-items:center;justify-content:space-between;gap:24px}.dx-nav nav{display:flex;gap:16px}.dx-nav a{color:inherit;text-decoration:none}.dx-hero{padding:clamp(64px,10vw,140px) 0}.dx-hero h1{font-size:clamp(42px,7vw,88px);line-height:1.02;margin:8px 0 20px;max-width:900px}.dx-lead{font-size:18px;line-height:1.6;max-width:650px;opacity:.72}.dx-button{margin-top:24px;border:0;border-radius:var(--dx-radius);background:var(--dx-color-3);color:white;padding:13px 20px;font:inherit;font-weight:600}.dx-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:var(--dx-space-4,24px);padding-bottom:80px}.dx-card{padding:var(--dx-space-4,24px);border-radius:var(--dx-radius);background:var(--dx-color-2);border:1px solid color-mix(in srgb,var(--dx-color-1) 10%,transparent);box-shadow:0 12px 40px rgba(0,0,0,.06)}.dx-footer{padding:48px 0;border-top:1px solid color-mix(in srgb,var(--dx-color-1) 12%,transparent)}`;
+}
+
+/* ---------------- Rendering ---------------- */
+function dxRenderExtraction(ex) {
+  // Colors tab
+  const swatchGrid = document.querySelector('[data-swatch-grid]');
+  if (swatchGrid) {
+    swatchGrid.innerHTML = ex.palette.map(p => `
+      <div class="swatch-item" data-copy="${p.hex}" title="Click to copy">
+        <div class="swatch-color" style="background:${p.hex}"></div>
+        <div class="swatch-meta">
+          <div class="name">${p.name}</div>
+          <div class="hex mono">${p.hex}</div>
+        </div>
+      </div>`).join('');
+    swatchGrid.querySelectorAll('[data-copy]').forEach(el => {
+      el.addEventListener('click', () => dxCopyText(el.dataset.copy, `Copied ${el.dataset.copy}`));
+    });
+  }
+
+  // Typography tab
+  const typeWrap = document.querySelector('[data-type-samples]');
+  if (typeWrap) {
+    typeWrap.innerHTML = `
+      <div class="type-sample">
+        <div class="label">Display — ${ex.fonts.display?.[0] || ex.fonts.display || 'sans-serif'}</div>
+        <div class="preview" style="font-size:34px;">Design, extracted.</div>
+      </div>
+      <div class="type-sample">
+        <div class="label">Body — ${ex.fonts.body?.[0] || ex.fonts.body || 'sans-serif'}</div>
+        <div class="preview" style="font-family:var(--font-body);font-size:15px;">The quick brown fox jumps over the lazy dog. 0123456789.</div>
+      </div>
+      <div class="type-sample">
+        <div class="label">Scale</div>
+        <div style="display:flex;align-items:baseline;gap:16px;flex-wrap:wrap;">
+          <span style="font-family:var(--font-display);font-size:40px;">40</span>
+          <span style="font-family:var(--font-display);font-size:28px;">28</span>
+          <span style="font-family:var(--font-display);font-size:20px;">20</span>
+          <span style="font-size:15px;">15</span>
+          <span style="font-size:12px;color:var(--muted);">12</span>
+        </div>
+      </div>`;
+  }
+
+  // Components tab
+  const compWrap = document.querySelector('[data-components]');
+  if (compWrap) {
+    compWrap.innerHTML = ex.components.map(c => `
+      <div class="comp-row">
+        <div class="comp-row-label">${c.type} <span class="chip mono">${c.count || 0}</span></div>
+        <span class="chip">${c.samples?.[0]?.selector || 'Detected component'}</span>
+      </div>`).join('') + `
+      <div class="comp-row">
+        <div class="comp-row-label">Spacing scale (px)</div>
+        ${(ex.spacing || []).map(s => `<span class="chip mono">${s}</span>`).join(' ')}
+      </div>
+      <div class="comp-row">
+        <div class="comp-row-label">Border radius</div>
+        <span class="chip mono">${ex.radius}px</span>
+      </div>
+      <div class="comp-row">
+        <div class="comp-row-label">Common shadows</div>
+        <span class="chip mono">${(ex.shadows || []).length} detected</span>
+      </div>
+      <div class="comp-row">
+        <div class="comp-row-label">Reconstruction</div>
+        <span class="chip mono">${ex.reconstruction?.mode || 'computed-dom'} · ${ex.reconstruction?.nodesLimit || 0} nodes</span>
+      </div>`;
+  }
+
+  // Code tab
+  const htmlCode = generateHTML(ex);
+  const cssCode = generateCSS(ex);
+  const htmlBlock = document.querySelector('[data-code-html]');
+  const cssBlock = document.querySelector('[data-code-css]');
+  if (htmlBlock) htmlBlock.textContent = htmlCode;
+  if (cssBlock) cssBlock.textContent = cssCode;
+
+  window.__dxCurrentExtraction = ex;
+  window.__dxCurrentHTML = htmlCode;
+  window.__dxCurrentCSS = cssCode;
+}
+
+/* ---------------- Copy / Download helpers ---------------- */
+function dxCopyText(text, toastMsg) {
+  navigator.clipboard?.writeText(text).then(() => {
+    dxToast(toastMsg || 'Copied to clipboard');
+  }).catch(() => {
+    dxToast('Copy failed — select and copy manually', 'error');
+  });
+}
+
+function dxDownloadText(filename, text) {
+  const blob = new Blob([text], { type: 'text/plain' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+}
+
+/* ---------------- Load a saved favorite into the extractor view ---------------- */
+function dxLoadFavIntoExtractor(favId) {
+  if (!DX_USER) return;
+  const form = document.getElementById('extractForm');
+  const resultsWrap = document.querySelector('.results-wrap');
+  const fav = DXStore.getFavoriteById(DX_USER.id, favId);
+  if (fav && form && resultsWrap) {
+    form.url.value = fav.url;
+    resultsWrap.classList.add('show');
+    dxRenderExtraction(fav);
+    document.querySelector('[data-save-fav]')?.setAttribute('disabled', 'true');
+    dxToast('Loaded from Favorites');
+  }
+}
+
+/* ---------------- Page wiring ---------------- */
+function dxInitExtractorPage() {
+  const form = document.getElementById('extractForm');
+  if (!form || !DX_USER) return;
+  if (form.dataset.bound) return;
+  form.dataset.bound = 'true';
+
+  const progressWrap = document.querySelector('.extract-progress');
+  const stepsWrap = document.querySelector('.steps');
+  const resultsWrap = document.querySelector('.results-wrap');
+  const submitBtn = form.querySelector('button[type="submit"]');
+  const errorWrap = document.getElementById('extractError');
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const url = form.url.value.trim();
+    if (!url) return;
+
+    submitBtn.disabled = true;
+    progressWrap.classList.add('show');
+    resultsWrap.classList.remove('show');
+    if (errorWrap) { errorWrap.className = 'form-msg'; errorWrap.textContent = ''; }
+    stepsWrap.innerHTML = EXTRACT_STEPS.map((s, i) => `<span class="extract-step" data-step="${i}">${s}</span>`).join('');
+    document.querySelector('[data-save-fav]')?.removeAttribute('disabled');
+
+    dxRealExtraction(url, {
+    onStep: (idx) => {
+      stepsWrap.querySelectorAll('.extract-step').forEach((el, i) => {
+        el.classList.toggle('done', i < idx);
+        el.classList.toggle('active', i === idx);
+      });
+    },
+    onDone: (extraction) => {
+      stepsWrap.querySelectorAll('.extract-step').forEach(el => el.classList.add('done'));
+      stepsWrap.querySelectorAll('.extract-step').forEach(el => el.classList.remove('active'));
+      submitBtn.disabled = false;
+      const saveBtn = document.querySelector('[data-save-fav]');
+      if (saveBtn) saveBtn.textContent = 'Save to Favorites';
+      setTimeout(() => {
+        progressWrap.classList.remove('show');
+        resultsWrap.classList.add('show');
+        dxRenderExtraction(extraction);
+        dxToast('Extraction complete');
+      }, 300);
+    },
+    onError: (error) => {
+      stepsWrap.querySelectorAll('.extract-step').forEach(el => {
+        el.classList.remove('active');
+      });
+      submitBtn.disabled = false;
+      progressWrap.classList.remove('show');
+      const message = error?.message || 'Extraction failed';
+      if (errorWrap) {
+        errorWrap.className = 'form-msg show error';
+        errorWrap.textContent = message;
+      }
+      dxToast(message, 'error');
+    }
+  });
+  });
+
+  // Tabs
+  document.querySelectorAll('.result-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.result-tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.result-panel').forEach(p => p.classList.remove('active'));
+      tab.classList.add('active');
+      document.getElementById(tab.dataset.tab)?.classList.add('active');
+    });
+  });
+
+  // Save to favorites
+  document.querySelector('[data-save-fav]')?.addEventListener('click', function () {
+    if (!window.__dxCurrentExtraction) return;
+    DXStore.addFavorite(DX_USER.id, window.__dxCurrentExtraction);
+    dxToast('Saved to Favorites');
+    this.setAttribute('disabled', 'true');
+    this.textContent = 'Saved';
+  });
+
+  // Copy / download actions
+  document.querySelector('[data-copy-html]')?.addEventListener('click', () => dxCopyText(window.__dxCurrentHTML, 'HTML copied'));
+  document.querySelector('[data-copy-css]')?.addEventListener('click', () => dxCopyText(window.__dxCurrentCSS, 'CSS copied'));
+  document.querySelector('[data-download-html]')?.addEventListener('click', () => dxDownloadText('index.html', window.__dxCurrentHTML || ''));
+  document.querySelector('[data-download-css]')?.addEventListener('click', () => dxDownloadText('style.css', window.__dxCurrentCSS || ''));
+}
+</script>
+
+<script>
+/* ==========================================================================
+   DesignExtract — router.js (new)
+   Lightweight client-side router that ties together the pages/views above
+   now that everything lives in a single HTML file. Handles auth guarding
+   (redirects signed-out users away from the app, and signed-in users away
+   from login/signup), toggling which top-level page and which dashboard
+   view is visible, and syncing the sidebar/topbar to the active route.
+   ========================================================================== */
+
+const DX_ROUTES = ['index', 'login', 'signup', 'dashboard', 'extractor', 'favorites', 'library', 'profile', 'settings'];
+const DX_APP_ROUTES = ['dashboard', 'extractor', 'favorites', 'library', 'profile', 'settings'];
+const DX_ROUTE_META = {
+  dashboard: { title: 'Dashboard', crumb: 'Overview of your extractions', showNotif: true, showNew: true },
+  extractor: { title: 'Website Extractor', crumb: 'Enter a URL to break down its design', showNotif: false, showNew: false },
+  favorites: { title: 'Favorites', crumb: "Designs you've saved for later", showNotif: false, showNew: true },
+  library: { title: 'Code Library', crumb: 'Generated HTML & CSS from your saved favorites', showNotif: false, showNew: false },
+  profile: { title: 'Profile', crumb: 'Your account details', showNotif: false, showNew: false },
+  settings: { title: 'Settings', crumb: 'Preferences, appearance, and account controls', showNotif: false, showNew: false }
+};
+
+function dxNavigate(route, favId) {
+  if (!DX_ROUTES.includes(route)) route = 'index';
+
+  const user = DXStore.getCurrentUser();
+  if ((route === 'login' || route === 'signup') && user) route = 'dashboard';
+  if (DX_APP_ROUTES.includes(route) && !user) route = 'login';
+
+  document.querySelectorAll('.dx-page').forEach(p => p.style.display = 'none');
+
+  if (route === 'index') {
+    document.getElementById('page-index').style.display = '';
+  } else if (route === 'login') {
+    document.getElementById('page-login').style.display = '';
+  } else if (route === 'signup') {
+    document.getElementById('page-signup').style.display = '';
+  } else {
+    document.getElementById('page-app').style.display = '';
+    dxInitDashboardShell();
+    dxShowView(route, favId);
+  }
+
+  dxInitHeaderAuthState();
+  window.scrollTo(0, 0);
+}
+
+function dxShowView(route, favId) {
+  document.querySelectorAll('.dash-content').forEach(el => el.style.display = 'none');
+  const view = document.getElementById('view-' + route);
+  if (view) view.style.display = '';
+
+  const meta = DX_ROUTE_META[route];
+  if (meta) {
+    const titleEl = document.getElementById('pageTitle');
+    const crumbEl = document.getElementById('pageCrumb');
+    const notifEl = document.getElementById('topbarNotif');
+    const newEl = document.getElementById('topbarNewExtraction');
+    if (titleEl) titleEl.textContent = meta.title;
+    if (crumbEl) crumbEl.textContent = meta.crumb;
+    if (notifEl) notifEl.style.display = meta.showNotif ? '' : 'none';
+    if (newEl) newEl.style.display = meta.showNew ? '' : 'none';
+  }
+
+  document.querySelectorAll('.side-link').forEach(link => {
+    link.classList.toggle('active', link.dataset.route === route);
+  });
+
+  const shell = document.querySelector('.dash-shell');
+  if (shell) shell.classList.remove('mobile-nav-open');
+
+  if (route === 'dashboard') dxInitDashboardHome();
+  if (route === 'favorites') dxInitFavoritesPage();
+  if (route === 'library') dxInitLibraryPage();
+  if (route === 'profile') dxInitProfilePage();
+  if (route === 'settings') dxInitSettingsPage();
+  if (route === 'extractor') {
+    dxInitExtractorPage();
+    if (favId) dxLoadFavIntoExtractor(favId);
+  }
+}
+
+/* Global click delegation for every internal [data-route] link/button */
+function dxInitGlobalNav() {
+  document.addEventListener('click', (e) => {
+    const link = e.target.closest('[data-route]');
+    if (!link) return;
+    e.preventDefault();
+    dxNavigate(link.dataset.route, link.dataset.fav);
+  });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  dxInitGlobalNav();
+  dxNavigate('index');
+});
+</script>
+</body>
+</html>
